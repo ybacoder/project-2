@@ -1,0 +1,21 @@
+{
+	"info": {
+		"_postman_id": "9e108648-8877-4326-ae3f-9fcd162bea92",
+		"name": "project-2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
