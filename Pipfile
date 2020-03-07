@@ -12,6 +12,8 @@ flask = "*"
 gunicorn = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"
+requests = "*"
+plotly = "*"
 
 [requires]
 python_version = "3.7"
