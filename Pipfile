@@ -10,6 +10,8 @@ pylint = "*"
 pandas = "*"
 flask = "*"
 gunicorn = "*"
+sqlalchemy = "*"
+flask-sqlalchemy = "*"
 
 [requires]
 python_version = "3.7"
