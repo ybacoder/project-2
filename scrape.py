@@ -1,11 +1,6 @@
-import requests, time
-from flask import Flask, render_template, jsonify
-from flask_sqlalchemy import SQLAlchemy
+import requests, time, datetime as dt
+from bs4 import BeautifulSoup
 
-# setup
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db/emoji.sqlite"
-db = SQLAlchemy(app)
 
 # URLs
 LAMBDA_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13114&reportTitle=SCED%20System%20Lambda&showHTMLView=&mimicKey"
@@ -13,7 +8,20 @@ ACTUAL_WIND_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13071&
 # HOURLY_ACTUAL_AND_FORECASTED_WIND_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13028&reportTitle=Wind%20Power%20Production%20-%20Hourly%20Averaged%20Actual%20and%20Forecasted%20Values&showHTMLView=&mimicKey"
 
 
-def scrape_CSVs(url):
-    """scrape all CSVs from the page and save any that are not already in the database"""
+def csv_link(tr):
+    """return the link to the ZIP file if it is for the CSV file; otherwise, None"""
 
-    pass
+    if tr.td.text.endswith("csv.zip"):
+        return tr.find('a')['href']
+
+
+def scrape_CSVs(url, since=None):
+    """scrape any new CSVs from the page and return as a list"""
+
+    r = requests.get(url)
+    
+    if r.status_code != 200:
+        print(f"Got status code {r.status_code} from {url}")
+
+    for tr in BeautifulSoup(r.text).find_all('tr'):
+        pass
