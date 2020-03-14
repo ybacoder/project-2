@@ -1,9 +1,10 @@
 import requests
 import time
+import traceback
 import datetime as dt
-import pandas as pd
-import io
-import zipfile
+from pandas import read_csv
+from io import BytesIO
+from zipfile import ZipFile
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
@@ -52,60 +53,63 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
 
     # download ZIP file
     r = urlopen(zip_url)
-    assert(r.status_code == 200)
+    assert r.status == 200
 
     # convert to ZipFile object
     bytes_zf = BytesIO(r.read())
-    zf = zipfile.ZipFile(bytes_zf)
+    zf = ZipFile(bytes_zf)
 
     # inspect
     zip_filenames = zf.namelist()
-    assert(len(zip_filenames) == 1)
+    assert len(zip_filenames) == 1
 
     # extract and return as df
-    return pd.read_csv(zf.open(zip_filenames[0]))
+    return read_csv(zf.open(zip_filenames[0]))
 
-def data_frames(ercot_url, since=None):
-    """scrape any new CSVs from the page and return as a list - since a certain time (datetime object), if specified"""
+
+def data_frames(ercot_page_url, since=None):
+    """scrape CSVs from the page and return as a list - since a certain time (datetime object), if specified
+To include additional info in case of errors, each row of the returned list is [datetime from filename, URL of ZIP file, DataFrame of CSV contents]."""
 
     # use start of 2020 as default limiting date
     if since is None:
         since = dt.datetime(2020, 1, 1)
 
-    # get HTML
-    r = requests.get(ercot_url)
-    
-    # check response status
-    if r.status_code != 200:
-        print(f"Got status code {r.status_code} from {url}")
-    
     # initialize with empty list
-    links = []  # to be tuples of (datetime, URL)
+    data = []  # to be lists of [datetime, URL, DataFrame]
 
-    # iterate over table rows to get links to desired ZIP files
-    for tr in BeautifulSoup(r.text).find_all('tr'):
-
-        filename = tr.td.text  # text of first column is the filename
-
-        if filename.endswith("csv.zip"):  # each file also comes in an XML option, but we don't have experience working with XML.
-            
-            # get date & time of file
-            tr_dt = file_dt(filename)
-            
-            # compare to "since" limit
-            if tr_dt > since:
-                # append file link
-                links.append((tr_dt, tr.find('a')['href']))
-            else:
-                break
+    try:   
+        # get HTML
+        r = requests.get(ercot_page_url)
         
-    # iterate over links to get the CSVs
-    for link in links:
+        # check response status
+        assert r.status_code == 200
 
-        # get CSV from ZIP (ensure there is only 1) - in memory
-        zip_csvs = list(csv_files(link))
-        assert len(zip_csvs) == 1
-        csv_file = zip_csvs[0]
+        # iterate over table rows to get links to desired ZIP files
+        for tr in BeautifulSoup(r.text, "lxml").find_all('tr'):
 
-        # get data from CSV
-        df = pd.read_csv(csv_file)
+            filename = tr.td.text  # text of first column is the filename
+
+            if filename.endswith("csv.zip"):  # each file also comes in an XML option, but we don't have experience working with XML.
+                
+                # get date & time of file
+                tr_dt = file_dt(filename)
+                
+                # compare to "since" limit
+                if tr_dt > since:
+                    # append file link
+                    data.append([tr_dt, tr.find('a')['href']])
+                else:
+                    break
+            
+        # iterate over links to get the CSVs
+        for row in data:
+            # get CSV from ZIP (ensure there is only 1) - in memory
+            row.append(data_frame(row[1]))
+        
+
+    except Exception:
+        print("A SCRAPING ERROR OCCURRED. TRACEBACK:")
+        traceback.print_exc()
+
+    return data
