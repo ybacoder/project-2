@@ -7,6 +7,15 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 
+# for determining when "now" is according to ERCOT
+TIME_ZONE = 'CST'
+TZ_OFFSETS = {
+    'CST': 0,
+    'PT': -2,
+    'EST': 1
+}
+
+
 # URLs
 LAMBDA_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13114&reportTitle=SCED%20System%20Lambda&showHTMLView=&mimicKey"
 WIND_5MIN_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13071&reportTitle=Wind%20Power%20Production%20-%20Actual%205-Minute%20Averaged%20Values&showHTMLView=&mimicKey"
@@ -30,7 +39,7 @@ def _file_dt(filename, now, year=None):
             break
     else:
         # if no match, try again using last year (e.g. at start of January there could be a delay in publishing) - just for future-proofing, in case we decide to keep this going until next year or later
-        return file_dt(filename, year - 1)
+        return _file_dt(filename, year - 1)
     
     # construct datetime from the date and time strings in the filename
     return dt.datetime(
@@ -65,7 +74,7 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
 def data_frames(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
     """scrape CSVs from the page and return as a list of associated data
 
-To include additional info in case of errors, each row of the returned list is [datetime from filename, URL of ZIP file, DataFrame of CSV contents].
+To include additional info in case of errors, each row of the returned list is [datetime of scraping, filename, URL of ZIP file, DataFrame of CSV contents].
 
 Use the `base_url` argument to specify the base URL.
 
@@ -73,7 +82,7 @@ Use the `since` argument (datetime object) to specify how far back to go (exclus
 
 If necessary, use the `before` argument (datetime object) to limit the recency of files scraped."""
 
-    now = dt.datetime.now()
+    now = dt.datetime.now() - dt.timedelta(0, TZ_OFFSETS[TIME_ZONE])
 
     # use start of 2020 as default "since" date
     if since is None:
@@ -107,12 +116,13 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
                 # get date & time of file
                 tr_dt = _file_dt(filename, now)
                 
-                # compare to "since" limit
-                if tr_dt > since and tr_dt < before:
-                    # append file link
-                    data.append([filename, base_url + tr.find('a')['href']])
-                else:
-                    break
+                # compare to `since`/`before` limits
+                if tr_dt < before:
+                    if tr_dt > since:
+                        # append filename and link
+                        data.append([now, filename, base_url + tr.find('a')['href']])
+                    else:
+                        break
         
         print(f"\tIDENTIFIED {len(data)} FILES TO DOWNLOAD.")
         print("DOWNLOADING FILES AND EXTRACTING DATA...")
