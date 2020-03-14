@@ -1,6 +1,4 @@
 import requests
-import time
-import traceback
 import datetime as dt
 from pandas import read_csv
 from io import BytesIO
@@ -12,19 +10,16 @@ from urllib.request import urlopen
 # URLs
 LAMBDA_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13114&reportTitle=SCED%20System%20Lambda&showHTMLView=&mimicKey"
 WIND_5MIN_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13071&reportTitle=Wind%20Power%20Production%20-%20Actual%205-Minute%20Averaged%20Values&showHTMLView=&mimicKey"
+_ERCOT_BASE_URL = "http://mis.ercot.com"  # required as scraped links don't include this part
 # HOURLY_ACTUAL_AND_FORECASTED_WIND_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13028&reportTitle=Wind%20Power%20Production%20-%20Hourly%20Averaged%20Actual%20and%20Forecasted%20Values&showHTMLView=&mimicKey"
 
 
-# this year - for locating dates
-this_year = dt.date.today().year
-
-
-def file_dt(filename, year=None):
+def _file_dt(filename, now, year=None):
     """extract the date and time from the filename"""
 
     # use current year by default
     if year is None:
-        year = this_year
+        year = now.year
 
     # find the part of the filename that starts with the specified year
     parts = filename.split('.')
@@ -34,17 +29,17 @@ def file_dt(filename, year=None):
             time_str = parts[i + 1]
             break
     else:
-        # if no match, try again using last year (e.g. at start of January there could be a delay in publishing)
+        # if no match, try again using last year (e.g. at start of January there could be a delay in publishing) - just for future-proofing, in case we decide to keep this going until next year or later
         return file_dt(filename, year - 1)
     
     # construct datetime from the date and time strings in the filename
     return dt.datetime(
-        date_str[:4],
-        date_str[4:6],
-        date_str[6:],
-        time_str[:2],
-        time_str[2:4],
-        time_str[4:6]
+        year,
+        int(date_str[4:6]),
+        int(date_str[6:]),
+        int(time_str[:2]),
+        int(time_str[2:4]),
+        int(time_str[4:6])
     )
 
 
@@ -67,20 +62,37 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
     return read_csv(zf.open(zip_filenames[0]))
 
 
-def data_frames(ercot_page_url, since=None):
-    """scrape CSVs from the page and return as a list - since a certain time (datetime object), if specified
-To include additional info in case of errors, each row of the returned list is [datetime from filename, URL of ZIP file, DataFrame of CSV contents]."""
+def data_frames(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
+    """scrape CSVs from the page and return as a list of associated data
 
-    # use start of 2020 as default limiting date
+To include additional info in case of errors, each row of the returned list is [datetime from filename, URL of ZIP file, DataFrame of CSV contents].
+
+Use the `base_url` argument to specify the base URL.
+
+Use the `since` argument (datetime object) to specify how far back to go (exclusive) - e.g. to stop before overlapping with previous data.
+
+If necessary, use the `before` argument (datetime object) to limit the recency of files scraped."""
+
+    now = dt.datetime.now()
+
+    # use start of 2020 as default "since" date
     if since is None:
-        since = dt.datetime(2020, 1, 1)
+        since = now - dt.timedelta(365)
+    
+    if before is None:
+        before = now
+
+    # use today as 
 
     # initialize with empty list
-    data = []  # to be lists of [datetime, URL, DataFrame]
+    data = []  # to be lists of [filename, URL, DataFrame]
+
+    print(f"SCRAPING {page_url}...")
+    print("LOCATING DESIRED DOWNLOAD LINKS...")
 
     try:   
         # get HTML
-        r = requests.get(ercot_page_url)
+        r = requests.get(page_url)
         
         # check response status
         assert r.status_code == 200
@@ -93,23 +105,29 @@ To include additional info in case of errors, each row of the returned list is [
             if filename.endswith("csv.zip"):  # each file also comes in an XML option, but we don't have experience working with XML.
                 
                 # get date & time of file
-                tr_dt = file_dt(filename)
+                tr_dt = _file_dt(filename, now)
                 
                 # compare to "since" limit
-                if tr_dt > since:
+                if tr_dt > since and tr_dt < before:
                     # append file link
-                    data.append([tr_dt, tr.find('a')['href']])
+                    data.append([filename, base_url + tr.find('a')['href']])
                 else:
                     break
-            
+        
+        print(f"\tIDENTIFIED {len(data)} FILES TO DOWNLOAD.")
+        print("DOWNLOADING FILES AND EXTRACTING DATA...")
+
         # iterate over links to get the CSVs
         for row in data:
             # get CSV from ZIP (ensure there is only 1) - in memory
             row.append(data_frame(row[1]))
+            print("\tSUCCESS:", row[0])
+            
+        print("SCRAPING SUCCESSFUL.")
         
-
-    except Exception:
+    except:
+        from traceback import print_exc
         print("A SCRAPING ERROR OCCURRED. TRACEBACK:")
-        traceback.print_exc()
+        print_exc()
 
     return data
