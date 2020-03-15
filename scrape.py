@@ -71,7 +71,7 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
     return read_csv(zf.open(zip_filenames[0]))
 
 
-def data_frames(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
+def get_data(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
     """scrape CSVs from the page and return as a list of associated data
 
 To include additional info in case of errors, each row of the returned list is [datetime of scraping, filename, URL of ZIP file, DataFrame of CSV contents].
@@ -124,14 +124,15 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
                     else:
                         break
         
-        print(f"\tIDENTIFIED {len(data)} FILES TO DOWNLOAD.")
+        L = len(data)
+        print(f"\tIDENTIFIED {L} FILES TO DOWNLOAD.")
         print("DOWNLOADING FILES AND EXTRACTING DATA...")
 
         # iterate over links to get the CSVs
-        for row in data:
+        for i, row in enumerate(data):
             # get CSV from ZIP (ensure there is only 1) - in memory
-            row.append(data_frame(row[1]))
-            print("\tSUCCESS:", row[0])
+            row.append(data_frame(row[2]))
+            print(f"\tSUCCESS ({i}/{L}): {row[1]}")
             
         print("SCRAPING SUCCESSFUL.")
         
