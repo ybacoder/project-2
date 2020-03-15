@@ -1,3 +1,24 @@
+# Eric Nordstrom
+# UT Coding Boot Camps - Data Analysis & Vizualization
+# Project #2
+
+
+"""
+For scraping CSVs from ERCOT webpages
+
+FUNCTION SUMMARIES - SEE FUNCTION DOCSTRINGS FOR MORE DETAILS
+    get_data            given the URL to an ERCOT page containing a table with zipped CSV files, return the file contents along with data regarding the scraping
+    data_frame          given the URL to download a ZIP file containing a single CSV file, return the CSV contents as a pandas.DataFrame
+
+VARIABLES
+    LAMBDA_URL          URL to ERCOT's real-time SCED system lambda downloads page
+    WIND_5MIN_URL       URL to ERCOT's real-time 5-minute averaged wind production downloads page
+    WIND_HOURLY_URL     URL to ERCOT's hourly averaged wind production downloads page, which includes wind predictions
+    TIME_ZONE           (default: "CST") Modify this to "PT" or "EST" if the time zone of the machine performing the scraping is not CST.
+"""
+
+
+# dependencies
 import requests
 import datetime as dt
 from pandas import read_csv
@@ -9,7 +30,7 @@ from urllib.request import urlopen
 
 # for determining when "now" is according to ERCOT
 TIME_ZONE = 'CST'
-TZ_OFFSETS = {
+_TZ_OFFSETS = {
     'CST': 0,
     'PT': -2,
     'EST': 1
@@ -19,8 +40,8 @@ TZ_OFFSETS = {
 # URLs
 LAMBDA_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13114&reportTitle=SCED%20System%20Lambda&showHTMLView=&mimicKey"
 WIND_5MIN_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13071&reportTitle=Wind%20Power%20Production%20-%20Actual%205-Minute%20Averaged%20Values&showHTMLView=&mimicKey"
+WIND_HOURLY_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13028&reportTitle=Wind%20Power%20Production%20-%20Hourly%20Averaged%20Actual%20and%20Forecasted%20Values&showHTMLView=&mimicKey"
 _ERCOT_BASE_URL = "http://mis.ercot.com"  # required as scraped links don't include this part
-# HOURLY_ACTUAL_AND_FORECASTED_WIND_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13028&reportTitle=Wind%20Power%20Production%20-%20Hourly%20Averaged%20Actual%20and%20Forecasted%20Values&showHTMLView=&mimicKey"
 
 
 def _file_dt(filename, now, year=None):
@@ -78,11 +99,11 @@ To include additional info in case of errors, each row of the returned list is [
 
 Use the `base_url` argument to specify the base URL.
 
-Use the `since` argument (datetime object) to specify how far back to go (exclusive) - e.g. to stop before overlapping with previous data.
+Use the `since` argument (datetime object) to specify how far back to go. (Intended to allow scraping only new data since last scrape.)
 
 If necessary, use the `before` argument (datetime object) to limit the recency of files scraped."""
 
-    now = dt.datetime.now() - dt.timedelta(0, TZ_OFFSETS[TIME_ZONE])
+    now = dt.datetime.now() - dt.timedelta(0, _TZ_OFFSETS[TIME_ZONE])
 
     # use start of 2020 as default "since" date
     if since is None:
