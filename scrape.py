@@ -29,12 +29,8 @@ from urllib.request import urlopen
 
 
 # for determining when "now" is according to ERCOT
-TIME_ZONE = 'CST'
-_TZ_OFFSETS = {
-    'CST': 0,
-    'PT': -2,
-    'EST': 1
-}
+TIME_ZONE = "CST"
+_TZ_OFFSETS = {"CST": 0, "PT": -2, "EST": 1}
 
 
 # URLs
@@ -52,7 +48,7 @@ def _file_dt(filename, now, year=None):
         year = now.year
 
     # find the part of the filename that starts with the specified year
-    parts = filename.split('.')
+    parts = filename.split(".")
     for i, part in enumerate(parts):
         if part.startswith(str(year)):
             date_str = part
@@ -61,7 +57,7 @@ def _file_dt(filename, now, year=None):
     else:
         # if no match, try again using last year (e.g. at start of January there could be a delay in publishing) - just for future-proofing, in case we decide to keep this going until next year or later
         return _file_dt(filename, year - 1)
-    
+
     # construct datetime from the date and time strings in the filename
     return dt.datetime(
         year,
@@ -69,7 +65,7 @@ def _file_dt(filename, now, year=None):
         int(date_str[6:]),
         int(time_str[:2]),
         int(time_str[2:4]),
-        int(time_str[4:6])
+        int(time_str[4:6]),
     )
 
 
@@ -108,11 +104,11 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
     # use start of 2020 as default "since" date
     if since is None:
         since = now - dt.timedelta(365)
-    
+
     if before is None:
         before = now
 
-    # use today as 
+    # use today as
 
     # initialize with empty list
     data = []  # to be lists of [filename, URL, DataFrame]
@@ -120,31 +116,33 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
     print(f"SCRAPING {page_url}...")
     print("LOCATING DESIRED DOWNLOAD LINKS...")
 
-    try:   
+    try:
         # get HTML
         r = requests.get(page_url)
-        
+
         # check response status
         assert r.status_code == 200
 
         # iterate over table rows to get links to desired ZIP files
-        for tr in BeautifulSoup(r.text, "lxml").find_all('tr'):
+        for tr in BeautifulSoup(r.text, "lxml").find_all("tr"):
 
             filename = tr.td.text  # text of first column is the filename
 
-            if filename.endswith("csv.zip"):  # each file also comes in an XML option, but we don't have experience working with XML.
-                
+            if filename.endswith(
+                "csv.zip"
+            ):  # each file also comes in an XML option, but we don't have experience working with XML.
+
                 # get date & time of file
                 tr_dt = _file_dt(filename, now)
-                
+
                 # compare to `since`/`before` limits
                 if tr_dt < before:
                     if tr_dt > since:
                         # append filename and link
-                        data.append([now, filename, base_url + tr.find('a')['href']])
+                        data.append([now, filename, base_url + tr.find("a")["href"]])
                     else:
                         break
-        
+
         L = len(data)
         print(f"\tIDENTIFIED {L} FILES TO DOWNLOAD.")
         print("DOWNLOADING FILES AND EXTRACTING DATA...")
@@ -154,11 +152,12 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
             # get CSV from ZIP (ensure there is only 1) - in memory
             row.append(data_frame(row[2]))
             print(f"\tSUCCESS ({i}/{L}): {row[1]}")
-            
+
         print("SCRAPING SUCCESSFUL.")
-        
+
     except:
         from traceback import print_exc
+
         print("A SCRAPING ERROR OCCURRED. TRACEBACK:")
         print_exc()
 
