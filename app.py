@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import scrape
+import scrape as _scrape
 import pandas as pd
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -19,9 +19,14 @@ def data_access():
     return render_template("data.html", )
 
 
-@app.route("/plot")
-def plot():
-    return render_template("plot.html", )
+@app.route("/timeseries")
+def plot1():
+    return render_template("plot1.html", )
+
+
+@app.route("/correlation")
+def plot2():
+    return render_template("plot2.html", )
 
 
 @app.route("/scrape")
@@ -36,6 +41,7 @@ def scrape():
     ### get necessary data and create new df to put in db
     ### necessary data is time of scrape + df contents
     ### wind data only need 1st row
+    ### put in db
 
     return render_template("scrape.html", )
 
