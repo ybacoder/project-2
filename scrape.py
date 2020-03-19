@@ -14,7 +14,6 @@ VARIABLES
     LAMBDA_URL          URL to ERCOT's real-time SCED system lambda downloads page
     WIND_5MIN_URL       URL to ERCOT's real-time 5-minute averaged wind production downloads page
     WIND_HOURLY_URL     URL to ERCOT's hourly averaged wind production downloads page, which includes wind predictions
-    TIME_ZONE           (default: "CST") Modify this to "PT" or "EST" if the time zone of the machine performing the scraping is not CST.
 """
 
 
@@ -26,11 +25,6 @@ from io import BytesIO
 from zipfile import ZipFile
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-
-
-# for determining when "now" is according to ERCOT
-TIME_ZONE = "CST"
-_TZ_OFFSETS = {"CST": 0, "PT": -2, "EST": 1}
 
 
 # URLs
@@ -99,7 +93,7 @@ Use the `since` argument (datetime object) to specify how far back to go. (Inten
 
 If necessary, use the `before` argument (datetime object) to limit the recency of files scraped."""
 
-    now = dt.datetime.now() - dt.timedelta(0, _TZ_OFFSETS[TIME_ZONE])
+    now = dt.datetime.now()
 
     # use start of 2020 as default "since" date
     if since is None:
@@ -107,8 +101,6 @@ If necessary, use the `before` argument (datetime object) to limit the recency o
 
     if before is None:
         before = now
-
-    # use today as
 
     # initialize with empty list
     data = []  # to be lists of [filename, URL, DataFrame]
