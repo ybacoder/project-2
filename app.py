@@ -18,14 +18,18 @@ def home():
 def data_access():
     return render_template("data.html", )
 
-
+# non-time data vs. time data
 @app.route("/timeseries")
 def plot1():
     return render_template("plot1.html", )
 
 
-@app.route("/correlation")
-def plot2():
+# non-time data vs. non-time data
+@app.route("/correlation/<query>")
+def plot2(query):
+
+    ### per Erin's testing specifications
+    
     return render_template("plot2.html", )
 
 
