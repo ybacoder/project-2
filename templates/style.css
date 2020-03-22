@@ -1,0 +1,10 @@
+h1.HomeHeader{
+    background: left/ 95% 100% url("../static/images/stock_texas_flag_banner.jpg") repeat-x;
+    position:relative;
+    display: inline-block;
+    margin:35px 25px;
+    padding:0 5px;
+    height:100px;
+    font-size: auto;
+    color: #86e2d5
+}
