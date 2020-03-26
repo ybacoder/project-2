@@ -16,6 +16,7 @@ requests = "*"
 plotly = "*"
 bs4 = "*"
 urllib = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"
