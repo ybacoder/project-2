@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import scraping
 import pandas as pd
 from sqlalchemy.ext.automap import automap_base
@@ -14,9 +14,15 @@ def home():
     return render_template("index.html", )
 
 
+### needs to be tested
 @app.route("/data")
 def data_access():
-    return render_template("data.html", )
+    """return a JSON of all stored data"""  # doesn't make a lot of sense. adding filtering here (or sub-endpoints like "today" or "latest") is a subject of future work.
+
+    query = session.query(Data)  # query all rows and columns
+    df = pd.read_sql(query.statement, con=engine)
+
+    return jsonify(df.to_dict)
 
 # non-time data vs. time data
 @app.route("/timeseries")
