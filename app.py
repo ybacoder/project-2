@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-import scrape as _scrape
+import scraping
 import pandas as pd
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -39,8 +39,8 @@ def scrape():
     ### query db to find date of most recent scrape
 
     # scrape
-    lambda_scrape = scrape.get_data(scrape.LAMBDA_URL, since=last_date)
-    wind_scrape = scrape.get_data(scrape.WIND_5MIN_URL, since=last_date)
+    lambda_scrape = scraping.get_data(scraping.LAMBDA_URL, since=last_date)
+    wind_scrape = scraping.get_data(scraping.WIND_5MIN_URL, since=last_date)
 
     ### get necessary data and create new df to put in db
     ### necessary data is time of scrape + df contents
