@@ -9,6 +9,11 @@ from sqlalchemy import create_engine, func
 
 app = Flask(__name__)
 
+### Example from 17 Pet Pals example
+# app.config["SQLALCHEMY_DATABASE_URI"] = (
+#     os.environ.get("JAWSDB_URL", "sqlite:///pets.sqlite") <-- replace the second string with our local db connection string
+# )
+
 @app.route("/")
 def home():
     return render_template("index.html", )
