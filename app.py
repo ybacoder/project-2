@@ -42,8 +42,30 @@ def data_access():
 # non-time data vs. time data
 @app.route("/timeseries")
 def plot1():
-    return render_template("plot1.html", )
+    """Return all timeseries data"""
 
+    results = app.session.query(models.Wind)\
+        .filter(models.Wind.System_Wide != 0)\
+        .all()
+
+    trace1 = {
+        "x": [], # Erin to fill in
+        "y": [], # Erin to fill in
+        "type": "scatter"
+    }
+
+    trace1 = {
+        "x": [], # Erin to fill in
+        "y": [], # Erin to fill in
+        "type": "scatter"
+    }
+
+    layout = {
+      "title": "Wind Generation and System Lambda",
+      "height": 700,
+      }
+    
+    return render_template("plot1.html", trace=[trace1, trace2], layout=layout)
 
 # non-time data vs. non-time data
 @app.route("/correlation")

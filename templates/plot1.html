@@ -41,7 +41,11 @@
             </div>
         </nav>
 
-        <div id="plot"></div>
-    
+        <center><div id="plot"></div></center>
+        <script>
+          plot_div = document.getElementById('plot');
+          Plotly.newPlot(plot_div, [{{ trace | safe }}], {{ layout | safe}});
+        </script>
+            
     </body>
 </html>
