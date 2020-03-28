@@ -34,7 +34,7 @@ def home():
 def data_access():
     """return a JSON of all stored data"""  # doesn't make a lot of sense. adding filtering here (or sub-endpoints like "today" or "latest") is a subject of future work.
 
-    query = session.query(Data)  # query all rows and columns
+    query = app.session.query(models.Wind)  # query all rows and columns
     df = pd.read_sql(query.statement, con=engine)
 
     return jsonify(df.to_dict)
