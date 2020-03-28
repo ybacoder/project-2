@@ -57,16 +57,10 @@ def plot2(query):
 @app.route("/scrape")
 def scrape():
 
-    ### query db to find date of most recent scrape
-
     # scrape
     clean_data.data_scrape()
 
-    ### get necessary data and create new df to put in db
-    ### necessary data is time of scrape + df contents
-    ### wind data only need 1st row
-    ### put in db
-
+    # load into db
     load.csv_db()
 
     return "Scraping Complete"

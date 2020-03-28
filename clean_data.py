@@ -57,7 +57,7 @@ def data_scrape():
 
     
     #Create Final Dataframe
-    final_df_df = pd.merge(final_lambda_df, final_wind_df, on=["SCEDTimeStamp"], how="outer")
+    final_df_df = pd.merge(final_lambda_df, final_wind_df, on=["SCEDTimeStamp"], how="outer").sort_values("SCEDTimeStamp")
 
     scrape_date = datetime.datetime.today().strftime("%m.%d.%Y")
 
