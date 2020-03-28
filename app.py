@@ -1,13 +1,23 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for
 import scraping
 import pandas as pd
 from sqlalchemy.ext.automap import automap_base
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import scoped_session
 from sqlalchemy import create_engine, func
+from typing import List
+from flask_cors import CORS
+from database import SessionLocal, engine
+import models
+import load
+import clean_data
+
+models.Base.metadata.create_all(bind=engine)
 
 ### initialize db connection & ORM
 
 app = Flask(__name__)
+CORS(app)
+app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func__)
 
 ### Example from 17 Pet Pals example
 # app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -50,15 +60,20 @@ def scrape():
     ### query db to find date of most recent scrape
 
     # scrape
-    lambda_scrape = scraping.get_data(scraping.LAMBDA_URL, since=last_date)
-    wind_scrape = scraping.get_data(scraping.WIND_5MIN_URL, since=last_date)
+    clean_data.data_scrape()
 
     ### get necessary data and create new df to put in db
     ### necessary data is time of scrape + df contents
     ### wind data only need 1st row
     ### put in db
 
-    return render_template("scrape.html", )
+    load.csv_db()
+
+    return "Scraping Complete"
+
+@app.teardown_appcontext
+def remove_session(*args, **kwargs):
+    app.session.remove()
 
 
 if __name__ == "__main__":
