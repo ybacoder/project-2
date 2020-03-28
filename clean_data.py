@@ -11,9 +11,9 @@ db = SessionLocal()
 
 models.Base.metadata.create_all(bind=engine)
 
-def data_scrape():
-    lambda_scrape = scraping.get_data(scraping.LAMBDA_URL)
-    wind_scrape = scraping.get_data(scraping.WIND_5MIN_URL)
+def data_scrape(since):
+    lambda_scrape = scraping.get_data(scraping.LAMBDA_URL, since=since)
+    wind_scrape = scraping.get_data(scraping.WIND_5MIN_URL, since=since)
 
     #Lambda Data Munging
     lambda_scrape_df = pd.DataFrame(lambda_scrape, columns= ["datetime", "filename", "file_url", "file_data"])
