@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for
 import scraping
 import pandas as pd
+import scraping as dt
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy import create_engine, func
@@ -29,7 +30,6 @@ def home():
     return render_template("index.html", )
 
 
-### needs to be tested
 @app.route("/data")
 def data_access():
     """return a JSON of all stored data"""  # doesn't make a lot of sense. adding filtering here (or sub-endpoints like "today" or "latest") is a subject of future work.
@@ -38,6 +38,7 @@ def data_access():
     df = pd.read_sql(query.statement, con=engine)
 
     return jsonify(df.to_dict)
+
 
 # non-time data vs. time data
 @app.route("/timeseries")
@@ -57,19 +58,17 @@ def plot2(query):
 @app.route("/scrape")
 def scrape():
 
-    ### query db to find date of most recent scrape
+    # get "since" date to avoid longer-than-necessary scrapes
+    since = app.session.query(models.Wind.SCEDTimeStamp).last()[0]
 
     # scrape
-    clean_data.data_scrape()
+    clean_data.data_scrape(since)
 
-    ### get necessary data and create new df to put in db
-    ### necessary data is time of scrape + df contents
-    ### wind data only need 1st row
-    ### put in db
-
+    # load into db
     load.csv_db()
 
     return "Scraping Complete"
+
 
 @app.teardown_appcontext
 def remove_session(*args, **kwargs):
