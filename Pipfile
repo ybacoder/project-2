@@ -15,7 +15,6 @@ flask-sqlalchemy = "*"
 requests = "*"
 plotly = "*"
 bs4 = "*"
-urllib = "*"
 pymysql = "*"
 
 [requires]
