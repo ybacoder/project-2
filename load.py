@@ -17,6 +17,7 @@ def csv_db():
     with open(f"scrape_{scrape_date}.csv", "r") as f:
 
         csv_reader = csv.DictReader(f)
+        i =0
 
         for row in csv_reader:
             wind_db = models.Wind(
@@ -34,6 +35,12 @@ def csv_db():
                 DSTFlag = row["DSTFlag"]
             )
             db.add(wind_db)
+            i += 1
+            if i == 1000:
+                db.commit()
+                i = 0
+            db.add(wind_db)
+            
         db.commit()
     db.close()
 

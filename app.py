@@ -69,7 +69,7 @@ def scrape():
 
     load.csv_db()
 
-    return render_template("scrape.html", )
+    return "Scraping Complete"
 
 @app.teardown_appcontext
 def remove_session(*args, **kwargs):
