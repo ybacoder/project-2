@@ -8,3 +8,12 @@ h1.HomeHeader{
     font-size: auto;
     color: #86e2d5
 }
+
+div.text-right{
+    float:right
+}
+
+div.col-md-8{
+    font-family: Georgia, serif;
+    font-size: 1.2em;
+}
