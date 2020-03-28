@@ -57,8 +57,11 @@ def plot2(query):
 @app.route("/scrape")
 def scrape():
 
+    # get "since" date to 
+    since = app.session.query(models.Wind.SCEDTimeStamp).last()[0]
+
     # scrape
-    clean_data.data_scrape()
+    clean_data.data_scrape(since)
 
     # load into db
     load.csv_db()
