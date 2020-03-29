@@ -55,7 +55,7 @@ def plot1():
         "type": "scatter"
     }
 
-    trace1 = {
+    trace2 = {
         "x": [], # Erin to fill in
         "y": [], # Erin to fill in
         "type": "scatter"
