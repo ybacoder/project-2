@@ -15,7 +15,7 @@ class DictMixIn:
         }
 
 
-class Wind(Base):
+class Wind(Base, DictMixIn):
     __tablename__ = "wind_data"
 
     id = Column(Integer, primary_key=True, index=True)
