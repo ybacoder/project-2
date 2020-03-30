@@ -32,12 +32,12 @@ def home():
 
 @app.route("/data")
 def data_access():
-    """return a JSON of all stored data"""  # doesn't make a lot of sense. adding filtering here (or sub-endpoints like "today" or "latest") is a subject of future work.
+    """return a JSON of requested stored data"""
 
-    # query = session.query(Data)  # query all rows and columns
-    # df = pd.read_sql(query.statement, con=engine)
+    results = app.session.query(models.Wind).all()
+    data = [result.to_dict() for result in results]
 
-    return render_template("data.html")
+    return jsonify(data)
 
 
 # non-time data vs. time data
