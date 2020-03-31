@@ -52,24 +52,29 @@ def plot1():
     trace1 = {
         "x": [result.SCEDTimeStamp for result in results],
         "y": [result.SystemLambda for result in results],
-        "name": 'Wind Generated ($/MWh) TimeSeries per Lambda'
+        "name": 'Wind Generated ($/MWh) TimeSeries per Lambda',
         "type": "line"
     }
 
     trace2 = {
         "x": [result.SCEDTimeStamp for result in results],
         "y": [result.System_Wide for result in results],
-        "name": 'Wind Generated ($/MWh) TimeSeries Systemwide'
+        "name": 'Wind Generated ($/MWh) TimeSeries Systemwide',
         "type": "line"
     }
 
     layout = {
-        {title: {text:'Wind Generation', font: {family: 'Courier New, monospace',size: 24},xref: 'paper',x: 0.05,},
-        xaxis: {title: {text: 'Time (5 min intervals)',font: {family: 'Courier New, monospace',size: 18,color: '#7f7f7f'}},},
-        yaxis: {title: {text: '$/MWh', font: {family: 'Courier New, monospace',size: 18,color: '#7f7f7f'}},}
-        }
-    
-    return render_template("plot1.html", trace=[trace1, trace2], layout=layout)
+      "title": "Wind Generated vs. System Lambda",
+      "xaxis": {
+          "title": "Wind Generation"
+      },
+      "yaxis": {
+          "title": "System Lambda & System Wide"
+      },
+      "height": 700,
+      }
+    #data=[trace1,trace2]
+    return render_template("plot1.html", trace=[[trace1,trace2]], layout=layout)
 
 # non-time data vs. non-time data
 @app.route("/correlation")
