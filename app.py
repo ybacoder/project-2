@@ -11,6 +11,8 @@ from database import SessionLocal, engine
 import models
 import load
 import clean_data
+import json
+import plotly
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -69,23 +71,40 @@ def plot1():
         .all()
 
     trace1 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.SystemLambda for result in results],
+        "name": 'System Lambda ($/MWh)',
         "type": "scatter"
     }
 
     trace2 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
-        "type": "scatter"
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.System_Wide for result in results],
+        "name": 'Wind Generation (GW)',
+        "type": "scatter",
+        "yaxis": "y2"
     }
 
     layout = {
-      "title": "Wind Generation and System Lambda",
-      "height": 700,
+      "title": "Wind Generation and System Lambda vs. Time",
+      "xaxis": {
+          "title": "Timestamp"
+      },
+      "yaxis": {
+          "title": "System Lambda ($/MWh)"
+      },
+      "yaxis2": {
+          "title": "Wind Generation (GW)",
+          "overlaying": "y",
+          "side": "right"
+      },
+      "height": 700
       }
     
-    return render_template("plot1.html", trace=[trace1, trace2], layout=layout)
+    data = [trace1, trace2]
+    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template("plot1.html", data_json=data_json, trace2=trace2, layout=layout)
 
 # non-time data vs. non-time data
 @app.route("/correlation")
@@ -104,12 +123,12 @@ def plot2():
     }
 
     layout = {
-      "title": "Wind Generation vs. System Lambda",
+      "title": "System Lambda ($/MWh) vs. Wind Generation (GW)",
       "xaxis": {
-          "title": "Wind Generation"
+          "title": "Wind Generation (GW)"
       },
       "yaxis": {
-          "title": "System Lambda"
+          "title": "System Lambda ($/MWh)"
       },
       "height": 700,
       }
