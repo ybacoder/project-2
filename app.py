@@ -30,7 +30,7 @@ def home():
     return render_template("index.html", )
 
 
-@app.route("/data")
+@app.route("/get_data")
 def data_access():
     """return a JSON of requested stored data"""
 
@@ -58,6 +58,11 @@ def data_access():
     except Exception as e:
         return jsonify({"status": "failure", "error": str(e)})
 
+
+@app.route("/data")
+def data():
+
+    return render_template("data.html", )
 
 # non-time data vs. time data
 @app.route("/timeseries")
