@@ -27,12 +27,20 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 
 @app.route("/")
 def home():
+    """home route"""
+
+    global referring_func
+    referring_func = "home"
+    
     return render_template("index.html", )
 
 
 @app.route("/data")
 def data_access():
     """return a JSON of requested stored data"""
+
+    global referring_func
+    referring_func = "data_access"
 
     request_start = request.args.get("start")
     request_end = request.args.get("end")
@@ -64,6 +72,9 @@ def data_access():
 def plot1():
     """Return all timeseries data"""
 
+    global referring_func
+    referring_func = "plot1"
+
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
         .all()
@@ -92,6 +103,9 @@ def plot1():
 def plot2():
     """Return all non-zero non-timeseries data"""
 
+    global referring_func
+    referring_func = "plot2"
+
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
         .all()
@@ -113,12 +127,8 @@ def plot2():
       },
       "height": 700,
       }
-    
-<<<<<<< HEAD
-    return render_template("plot2.html", trace=trace, layout=layout)
-=======
+
     return render_template("plot2.html", trace=[trace], layout=layout)
->>>>>>> master
 
 
 @app.route("/scrape")
@@ -135,7 +145,7 @@ def scrape():
     # load into db
     load.csv_db()
 
-    return "Scraping Complete"
+    return url_for(referring_func)
 
 
 @app.teardown_appcontext
