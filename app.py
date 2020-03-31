@@ -50,21 +50,24 @@ def plot1():
         .all()
 
     trace1 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
-        "type": "scatter"
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.SystemLambda for result in results],
+        "name": 'Wind Generated ($/MWh) TimeSeries per Lambda'
+        "type": "line"
     }
 
     trace2 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
-        "type": "scatter"
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.System_Wide for result in results],
+        "name": 'Wind Generated ($/MWh) TimeSeries Systemwide'
+        "type": "line"
     }
 
     layout = {
-      "title": "Wind Generation and System Lambda",
-      "height": 700,
-      }
+        {title: {text:'Wind Generation', font: {family: 'Courier New, monospace',size: 24},xref: 'paper',x: 0.05,},
+        xaxis: {title: {text: 'Time (5 min intervals)',font: {family: 'Courier New, monospace',size: 18,color: '#7f7f7f'}},},
+        yaxis: {title: {text: '$/MWh', font: {family: 'Courier New, monospace',size: 18,color: '#7f7f7f'}},}
+        }
     
     return render_template("plot1.html", trace=[trace1, trace2], layout=layout)
 
