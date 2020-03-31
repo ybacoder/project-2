@@ -114,7 +114,7 @@ def plot2():
       "height": 700,
       }
     
-    return render_template("plot2.html", trace=trace, layout=layout)
+    return render_template("plot2.html", trace=[trace], layout=layout)
 
 
 @app.route("/scrape")
