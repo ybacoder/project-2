@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request
+from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request, redirect
 import scraping
 import pandas as pd
 import datetime as dt
@@ -16,7 +16,7 @@ import plotly
 
 models.Base.metadata.create_all(bind=engine)
 
-### initialize db connection & ORM
+# initialize db connection & ORM
 
 app = Flask(__name__)
 CORS(app)
@@ -27,14 +27,26 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 #     os.environ.get("JAWSDB_URL", "sqlite:///pets.sqlite") <-- replace the second string with our local db connection string
 # )
 
+# for redirect after scraping
+referring_func = None
+
+
 @app.route("/")
 def home():
+    """home route"""
+
+    global referring_func
+    referring_func = "home"
+
     return render_template("index.html", )
 
 
 @app.route("/data")
 def data_access():
     """return a JSON of requested stored data"""
+
+    global referring_func
+    referring_func = "data_access"
 
     request_start = request.args.get("start")
     request_end = request.args.get("end")
@@ -65,6 +77,9 @@ def data_access():
 @app.route("/timeseries")
 def plot1():
     """Return all timeseries data"""
+
+    global referring_func
+    referring_func = "plot1"
 
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
@@ -111,6 +126,9 @@ def plot1():
 def plot2():
     """Return all non-zero non-timeseries data"""
 
+    global referring_func
+    referring_func = "plot2"
+
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
         .all()
@@ -132,15 +150,17 @@ def plot2():
       },
       "height": 700,
       }
-    
+
     return render_template("plot2.html", trace=[trace], layout=layout)
 
 
 @app.route("/scrape")
 def scrape():
 
+    global referring_func
+
     # get "since" date to avoid longer-than-necessary scrapes
-    since = app.session.query(models.Wind.SCEDTimeStamp).last()[0]
+    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
     # scrape
     clean_data.data_scrape(since)
@@ -148,7 +168,7 @@ def scrape():
     # load into db
     load.csv_db()
 
-    return "Scraping Complete"
+    return redirect(url_for(referring_func)) if referring_func else "Database import complete!"
 
 
 @app.teardown_appcontext
