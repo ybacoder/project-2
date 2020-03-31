@@ -1,7 +1,7 @@
-from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for
+from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request
 import scraping
 import pandas as pd
-import scraping as dt
+import datetime as dt
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy import create_engine, func
@@ -34,10 +34,29 @@ def home():
 def data_access():
     """return a JSON of requested stored data"""
 
-    results = app.session.query(models.Wind).all()
-    data = [result.to_dict() for result in results]
+    request_start = request.args.get("start")
+    request_end = request.args.get("end")
 
-    return jsonify(data)
+    try:
+        base_cmd = app.session.query(models.Wind)
+
+        if request_start:
+            base_cmd = base_cmd.filter(
+                models.Wind.SCEDTimeStamp >= dt.datetime.strptime(request_start, "%Y-%m-%d")
+            )
+
+        if request_end:
+            base_cmd = base_cmd.filter(
+                models.Wind.SCEDTimeStamp <= dt.datetime.strptime(request_end, "%Y-%m-%d")
+            )
+
+        results = base_cmd.all()
+        data = [result.to_dict() for result in results]
+
+        return jsonify(data)
+
+    except Exception as e:
+        return jsonify({"status": "failure", "error": str(e)})
 
 
 # non-time data vs. time data
