@@ -1,13 +1,25 @@
 h1.HomeHeader{
-    background: left/ 95% 100% url("../static/images/stock_texas_flag_banner.jpg") repeat-x;
+    /* background: left/ 95% 100% url("../static/images/stock_texas_flag_banner.jpg") repeat-x; */
     position:relative;
     display: inline-block;
     margin:35px 25px;
     padding:0 5px;
     height:100px;
     font-size: auto;
-    color: #86e2d5
+    color: black;
 }
+
+h1.HomeHeader::after {
+    content: "";
+    background: left/ 95% 100% url("../static/images/stock_texas_flag_banner.jpg") repeat-x;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;   
+  }
 
 div.text-right{
     float:right
@@ -16,4 +28,12 @@ div.text-right{
 div.col-md-8{
     font-family: Georgia, serif;
     font-size: 1.2em;
+}
+
+footer{
+    padding-top: 50px;
+}
+
+p.copyright-text{
+    font-size: small;
 }
