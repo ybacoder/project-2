@@ -65,7 +65,7 @@ def data_access():
             )
 
         results = base_cmd.all()
-        data = {result.SCEDTimeStamp: result.to_dict(False) for result in results}
+        data = {result.SCEDTimeStamp.isoformat(): result.to_dict(False) for result in results}
 
         return jsonify(data)
 
