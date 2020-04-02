@@ -40,6 +40,31 @@
             </div>
         </nav>
 
-    
+        <div class="col-md-4"></div>
+        <center>
+            <div class="col-md-4">
+              <form>
+                <div class="form-group">
+                  <ul class="list-group" id="filters">
+                    <li class="filter list-group-item">
+                      <label for="start_date">Enter a Start Date</label>
+                      <input class="form-control" id="start" type="text" placeholder="2020-03-25">
+                    </li>
+                  </ul>
+                  <ul class="list-group" id="filters">
+                    <li class="filter list-group-item">
+                      <label for="end_date">Enter an End Date</label>
+                      <input class="form-control" id="end" type="text" text-align="center" placeholder="2020-03-26">
+                    </li>
+                  </ul>
+                  <button id="filter-btn" type="button" class="btn btn-default">Get Data</button>
+                </div>
+              </form>
+            </div>
+        </center>
+        <div class="col-md-4"></div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
+      <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     </body>
 </html>
