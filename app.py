@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request
+from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request, redirect
 import scraping
 import pandas as pd
 import datetime as dt
@@ -11,10 +11,12 @@ from database import SessionLocal, engine
 import models
 import load
 import clean_data
+import json
+import plotly
 
 models.Base.metadata.create_all(bind=engine)
 
-### initialize db connection & ORM
+# initialize db connection & ORM
 
 app = Flask(__name__)
 CORS(app)
@@ -25,14 +27,26 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 #     os.environ.get("JAWSDB_URL", "sqlite:///pets.sqlite") <-- replace the second string with our local db connection string
 # )
 
+# for redirect after scraping
+referring_func = None
+
+
 @app.route("/")
 def home():
+    """home route"""
+
+    global referring_func
+    referring_func = "home"
+
     return render_template("index.html", )
 
 
 @app.route("/get_data")
 def data_access():
     """return a JSON of requested stored data"""
+
+    global referring_func
+    referring_func = "data_access"
 
     request_start = request.args.get("start")
     request_end = request.args.get("end")
@@ -69,33 +83,56 @@ def data():
 def plot1():
     """Return all timeseries data"""
 
+    global referring_func
+    referring_func = "plot1"
+
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
         .all()
 
     trace1 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.SystemLambda for result in results],
+        "name": 'System Lambda ($/MWh)',
         "type": "scatter"
     }
 
     trace2 = {
-        "x": [], # Erin to fill in
-        "y": [], # Erin to fill in
-        "type": "scatter"
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.System_Wide for result in results],
+        "name": 'Wind Generation (GW)',
+        "type": "scatter",
+        "yaxis": "y2"
     }
 
     layout = {
-      "title": "Wind Generation and System Lambda",
-      "height": 700,
+      "title": "Wind Generation and System Lambda vs. Time",
+      "xaxis": {
+          "title": "Timestamp"
+      },
+      "yaxis": {
+          "title": "System Lambda ($/MWh)"
+      },
+      "yaxis2": {
+          "title": "Wind Generation (GW)",
+          "overlaying": "y",
+          "side": "right"
+      },
+      "height": 700
       }
     
-    return render_template("plot1.html", trace=[trace1, trace2], layout=layout)
+    data = [trace1, trace2]
+    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template("plot1.html", data_json=data_json, trace2=trace2, layout=layout)
 
 # non-time data vs. non-time data
 @app.route("/correlation")
 def plot2():
     """Return all non-zero non-timeseries data"""
+
+    global referring_func
+    referring_func = "plot2"
 
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
@@ -109,24 +146,26 @@ def plot2():
     }
 
     layout = {
-      "title": "Wind Generation vs. System Lambda",
+      "title": "System Lambda ($/MWh) vs. Wind Generation (GW)",
       "xaxis": {
-          "title": "Wind Generation"
+          "title": "Wind Generation (GW)"
       },
       "yaxis": {
-          "title": "System Lambda"
+          "title": "System Lambda ($/MWh)"
       },
       "height": 700,
       }
-    
+
     return render_template("plot2.html", trace=[trace], layout=layout)
 
 
 @app.route("/scrape")
 def scrape():
 
+    global referring_func
+
     # get "since" date to avoid longer-than-necessary scrapes
-    since = app.session.query(models.Wind.SCEDTimeStamp).last()[0]
+    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
     # scrape
     clean_data.data_scrape(since)
@@ -134,7 +173,7 @@ def scrape():
     # load into db
     load.csv_db()
 
-    return "Scraping Complete"
+    return redirect(url_for(referring_func)) if referring_func else "Database import complete!"
 
 
 @app.teardown_appcontext
