@@ -13,7 +13,7 @@
 
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/">Texas Wind Enery and Prices</a>
+            <a class="navbar-brand" href="/">Texas Wind Energy and Prices</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -44,7 +44,7 @@
         <center><div id="plot"></div></center>
         <script>
           plot_div = document.getElementById('plot');
-          Plotly.newPlot(plot_div, [{{ trace | safe }}], {{ layout | safe }});
+          Plotly.newPlot(plot_div, {{ data_json | safe }}, {{ layout | safe }});
         </script>
             
     </body>

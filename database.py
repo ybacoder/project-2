@@ -10,7 +10,8 @@ PASSWORD = "l2gzxi58ynrq4pbd"
 HOST = "tyduzbv3ggpf15sx.cbetxkdyhwsb.us-east-1.rds.amazonaws.com"
 PORT = "3306"
 DATABASE = "pmfkjy5n1gcwlin1"
-engine = create_engine(f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+engine = create_engine(f"mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}",
+    pool_size=2)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
