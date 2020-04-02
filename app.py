@@ -25,6 +25,7 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 #     os.environ.get("JAWSDB_URL", "sqlite:///pets.sqlite") <-- replace the second string with our local db connection string
 # )
 
+
 @app.route("/")
 def home():
     return render_template("index.html", )
@@ -51,7 +52,7 @@ def data_access():
             )
 
         results = base_cmd.all()
-        data = [result.to_dict() for result in results]
+        data = {result.SCEDTimeStamp: result.to_dict(False) for result in results}
 
         return jsonify(data)
 
