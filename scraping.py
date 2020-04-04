@@ -18,7 +18,7 @@ VARIABLES
 
 
 # dependencies
-import requests, worker
+import requests
 import datetime as dt
 from pandas import read_csv
 from io import BytesIO
@@ -80,6 +80,7 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
 
     # extract and return as df
     return read_csv(zf.open(zip_filenames[0]))
+
 
 
 def get_data(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
