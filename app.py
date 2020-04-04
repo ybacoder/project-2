@@ -61,7 +61,7 @@ def data_access():
 
         if request_end:
             base_cmd = base_cmd.filter(
-                models.Wind.SCEDTimeStamp <= dt.datetime.strptime(request_end, "%Y-%m-%d")
+                models.Wind.SCEDTimeStamp < (dt.datetime.strptime(request_end, "%Y-%m-%d") + dt.timedelta(days=1))
             )
 
         results = base_cmd.all()

@@ -6,10 +6,10 @@ const get_data = function() {
     let start = d3.select("#start").property("value")
     let end = d3.select("#end").property("value")
     
-    let data_route = "get_data?"
+    let data_route = new URL("../get_data", window.location.href)
     
-    if (start) {data_route += "start=" + start}
-    if (end) {data_route += "&end=" + end}
+    if (start) {data_route.searchParams.append("start", start)}
+    if (end) {data_route.searchParams.append("end", end)}
 
     window.location.href = data_route
 }
