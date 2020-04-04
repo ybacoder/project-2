@@ -12,11 +12,6 @@ redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
 
 conn = redis.from_url(redis_url)
 
-def queue(func):
-    def queued_func(*args, **kwargs):
-        return Queue(connection=conn).enqueue(func, *args, **kwargs)
-    return queued_func
-
 if __name__ == '__main__':
     with Connection(conn):
         worker = Worker(map(Queue, listen))

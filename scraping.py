@@ -81,7 +81,7 @@ def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downlo
     # extract and return as df
     return read_csv(zf.open(zip_filenames[0]))
 
-@worker.queue
+
 def get_data(page_url, base_url=_ERCOT_BASE_URL, since=None, before=None):
     """scrape CSVs from the page and return as a list of associated data
 
