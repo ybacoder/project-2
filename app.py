@@ -140,17 +140,20 @@ def plot2():
     }
 
     layout = {
-      "title": "System Lambda ($/MWh) vs. Wind Generation (GW)",
-      "xaxis": {
-          "title": "Wind Generation (GW)"
-      },
-      "yaxis": {
-          "title": "System Lambda ($/MWh)"
-      },
-      "height": 700,
-      }
+        "title": "System Lambda vs. Wind Generation",
+        "xaxis": {
+            "title": "Wind Generation (GW)"
+        },
+        "yaxis": {
+            "title": "System Lambda ($/MWh)"
+        },
+        "height": 700,
+    }
+      
+    data = [trace]
+    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template("plot2.html", trace=[trace], layout=layout)
+    return render_template("plot2.html", data_json=data_json, layout=layout)
 
 
 @app.route("/scrape")
