@@ -17,15 +17,9 @@ import plotly
 models.Base.metadata.create_all(bind=engine)
 
 # initialize db connection & ORM
-
 app = Flask(__name__)
 CORS(app)
 app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func__)
-
-### Example from 17 Pet Pals example
-# app.config["SQLALCHEMY_DATABASE_URI"] = (
-#     os.environ.get("JAWSDB_URL", "sqlite:///pets.sqlite") <-- replace the second string with our local db connection string
-# )
 
 # for redirect after scraping
 referring_func = None
@@ -78,7 +72,7 @@ def data():
 
     return render_template("data.html", )
 
-# non-time data vs. time data
+
 @app.route("/timeseries")
 def plot1():
     """Return all timeseries data"""
@@ -126,7 +120,7 @@ def plot1():
 
     return render_template("plot1.html", data_json=data_json, trace2=trace2, layout=layout)
 
-# non-time data vs. non-time data
+
 @app.route("/correlation")
 def plot2():
     """Return all non-zero non-timeseries data"""
