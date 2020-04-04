@@ -28,15 +28,15 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 # )
 
 # for redirect after scraping
-referring_func = None
+referring_func_name = None
 
 
 @app.route("/")
 def home():
     """home route"""
 
-    global referring_func
-    referring_func = "home"
+    global referring_func_name
+    referring_func_name = "home"
 
     return render_template("index.html", )
 
@@ -45,8 +45,8 @@ def home():
 def data_access():
     """return a JSON of requested stored data"""
 
-    global referring_func
-    referring_func = "data_access"
+    global referring_func_name
+    referring_func_name = "data_access"
 
     request_start = request.args.get("start")
     request_end = request.args.get("end")
@@ -83,8 +83,8 @@ def data():
 def plot1():
     """Return all timeseries data"""
 
-    global referring_func
-    referring_func = "plot1"
+    global referring_func_name
+    referring_func_name = "plot1"
 
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
@@ -131,8 +131,8 @@ def plot1():
 def plot2():
     """Return all non-zero non-timeseries data"""
 
-    global referring_func
-    referring_func = "plot2"
+    global referring_func_name
+    referring_func_name = "plot2"
 
     results = app.session.query(models.Wind)\
         .filter(models.Wind.System_Wide != 0)\
@@ -162,7 +162,7 @@ def plot2():
 @app.route("/scrape")
 def scrape():
 
-    global referring_func
+    global referring_func_name
 
     # get "since" date to avoid longer-than-necessary scrapes
     since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
@@ -173,7 +173,7 @@ def scrape():
     # load into db
     load.csv_db()
 
-    return redirect(url_for(referring_func)) if referring_func else "Database import complete!"
+    return redirect(url_for(referring_func_name)) if referring_func_name else "Database import complete!"
 
 
 @app.teardown_appcontext

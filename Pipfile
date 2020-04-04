@@ -18,6 +18,9 @@ bs4 = "*"
 pymysql = "*"
 lxml = "*"
 flask-cors = "*"
+redis = "*"
+rq = "*"
+utils = "*"
 
 [requires]
 python_version = "3.7"
