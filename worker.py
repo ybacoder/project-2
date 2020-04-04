@@ -14,10 +14,7 @@ conn = redis.from_url(redis_url)
 
 def queue(func):
     def queued_func(*args, **kwargs):
-        return Queue(connection=conn).enqueue(
-            lambda args, kwargs: func(*args, **kwargs),
-            "http://heroku.com"
-        )
+        return Queue(connection=conn).enqueue(func, *args, **kwargs)
     return queued_func
 
 if __name__ == '__main__':
