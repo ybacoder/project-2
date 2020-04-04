@@ -118,7 +118,7 @@ def plot1():
     data = [trace1, trace2]
     data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template("plot1.html", data_json=data_json, trace2=trace2, layout=layout)
+    return render_template("plot1.html", data_json=data_json, layout=layout)
 
 
 @app.route("/correlation")
