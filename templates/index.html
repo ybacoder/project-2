@@ -1,127 +1,195 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Texas Wind Energy</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <title>Texas Wind Energy</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
 
-    <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Texas Wind Energy and Prices</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-              <ul class="navbar-nav">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="data">Data</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="scrape">Data Scrape</a>
-                  </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Plot Visualizations
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="timeseries">Time Series</a>
-                    <a class="dropdown-item" href="correlation">Correlation</a>
-                  </div>
-                </li>
-              </ul>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Texas Wind Energy and Prices</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"
+              >Home<span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="data">Data</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="scrape">Data Scrape</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Plot Visualizations
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="timeseries">Time Series</a>
+              <a class="dropdown-item" href="correlation">Correlation</a>
             </div>
-        </nav>
-        <div>
-            <div class="text-right">
-                <a href="https://github.com/ybacoder/project-2" rel="noreferrer" target="_blank">
-                    <img width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
-                </a>
-            </div>
-            <div class="row">
-                <div class="container">
-                    <div class="logo">
-                    <h2 class="HomeHeader">  Texas Wind Energy Home Page </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div>
+      <div class="text-right">
+        <a
+          href="https://github.com/ybacoder/project-2"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <img
+            width="149"
+            height="149"
+            src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png?resize=149%2C149"
+            class="attachment-full size-full"
+            alt="Fork me on GitHub"
+            data-recalc-dims="1"
+          />
+        </a>
+      </div>
+      <div class="row">
         <div class="container">
-            <!--Normally these medium columns go full wide on small screen sizes-->
-            <div class="row">
-              <div class="col-md-4">
-                <img src="../static/images/JohnDeere_006-medium.jpg" width=350 height =300>
-              </div>
-              <div class="col-md-8">
-                <div class="box skyblue"></div>From the Hill Country to the Great Plains and Mountains, Texas makes up approximately 7% of the total water and land area of the US, an area only second to Alaska. With the varying topography and climate, 
-                  it's no wonder Texas leads the nation in Energy production from oil and natural gas, to coal, wind and solar. According to the US Energy Information Administation (US EIA), Texas makes up 20% of US domestically produced Energy 
-                  and is the leading producer of wind generated electricity. </div>
-              </div>
+          <div class="logo">
+            <h2 class="HomeHeader">Texas Wind Energy Home Page</h2>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="container">
-            <div class ="row">
-              <div class="col-md-8">
-                <div class="box skyblue">Due to the vaying nature of wind, you might wonder how the renewable source of energy plays a role in the energy prices you see as a consumer.
-                    Generally speaking, when the wind blows, and wind turbines spin to generate power, you might expect the overall cost of energy to drop. And vice versa, when the wind isn't blowing
-                    as the energy supply is dependant on more traditional sources, the costs then might go up. But by how much? 
-                    <br>Our project will scrape ERCOT data into a database and try to find a correlation between the amount of wind generated in gigawatts (GW) over a period of time and also systemwide price of energy.
-                </div>
-              </div>
-              <div class="col-md-4">
-                <img src="../static/images/business-candle-stick-graph-chart-600w-1006988995.jpg" width=350 height=300>
-              </div>
-            </div>
+    <div class="container">
+      <!--Normally these medium columns go full wide on small screen sizes-->
+      <div class="row">
+        <div class="col-md-4">
+          <img
+            src="../static/images/JohnDeere_006-medium.jpg"
+            width="350"
+            height="300"
+          />
         </div>
-        <div>
-            <p>
+        <div class="col-md-8">
+          <div class="box skyblue"></div>
+          From the Hill Country to the Great Plains and Mountains, Texas makes
+          up approximately 7% of the total water and land area of the US, an
+          area only second to Alaska. With the varying topography and climate,
+          it's no wonder Texas leads the nation in Energy production from oil
+          and natural gas, to coal, wind and solar. According to the US Energy
+          Information Administation (US EIA), Texas makes up 20% of US
+          domestically produced Energy and is the leading producer of wind
+          generated electricity.
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="box skyblue">
+            Due to the vaying nature of wind, you might wonder how the renewable
+            source of energy plays a role in the energy prices you see as a
+            consumer. Generally speaking, when the wind blows, and wind turbines
+            spin to generate power, you might expect the overall cost of energy
+            to drop. And vice versa, when the wind isn't blowing as the energy
+            supply is dependant on more traditional sources, the costs then
+            might go up. But by how much? <br />Our project will scrape ERCOT
+            data into a database and try to find a correlation between the
+            amount of wind generated in gigawatts (GW) over a period of time and
+            also systemwide price of energy.
+          </div>
+        </div>
+        <div class="col-md-4">
+          <img
+            src="../static/images/business-candle-stick-graph-chart-600w-1006988995.jpg"
+            width="350"
+            height="300"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <p></p>
+      <p></p>
+    </div>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h6>About</h6>
+            <p class="text-justify">
+              Texas Wind Energy is a project created by Team YEEAA. Yacub
+              Bholat, Eric Nordstrom, Erin Oefelein, Allie K and Anne Oluwole.
             </p>
-            <p>
-            </p>
+          </div>
+
+          <div class="col-xs-6 col-md-3">
+            <h6>Team Member Individual Pages</h6>
+            <ul class="footer-links">
+              <li><a href="https://github.com/ybacoder">Yacub</a></li>
+              <li><a href="https://github.com/eanord4">Eric</a></li>
+              <li><a href="https://github.com/eoefelein">Erin</a></li>
+              <li><a href="https://github.com/akkheyy">Allie</a></li>
+              <li><a href="http://github.com/oluwa714">Anne</a></li>
+            </ul>
+          </div>
         </div>
-        <footer class="site-footer">
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-12 col-md-6">
-                  <h6>About</h6>
-                  <p class="text-justify">Texas Wind Energy is a project created by Team YEEAA. Yacub Bholat, Eric Nordstrom, Erin Oefelein, Allie K and Anne Oluwole.</p>
-                </div>
-      
-                <div class="col-xs-6 col-md-3">
-                  <h6>Team Member Individual Pages</h6>
-                  <ul class="footer-links">
-                    <li><a href="https://github.com/ybacoder">Yacub</a></li>
-                    <li><a href="https://github.com/eanord4">Eric</a></li>
-                    <li><a href="https://github.com/eoefelein">Erin</a></li>
-                    <li><a href="https://github.com/akkheyy">Allie</a></li>
-                    <li><a href="http://github.com/oluwa714">Anne</a></li>
-                  </ul>
-                </div>
-      
-              </div>
-              <hr>
-            </div>
-            <div class="container">
-              <div class="row">
-                <div class="col-md-8 col-sm-6 col-xs-12">
-                  <p class="copyright-text">Copyright &copy; 2020 All Rights Reserved by Trinity
-                  </p>
-                </div>
-              </div>
-            </div>
-      </footer>
-        
+        <hr />
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-sm-6 col-xs-12">
+            <p class="copyright-text">
+              Copyright &copy; 2020 All Rights Reserved by Trinity
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
-
-
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  
-    </body>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
