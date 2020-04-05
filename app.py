@@ -1,4 +1,12 @@
-from flask import Flask, render_template, jsonify, _app_ctx_stack, url_for, request, redirect
+from flask import (
+    Flask,
+    render_template,
+    jsonify,
+    _app_ctx_stack,
+    url_for,
+    request,
+    redirect,
+)
 import scraping
 import pandas as pd
 import datetime as dt
@@ -32,7 +40,7 @@ def home():
     global referring_func_name
     referring_func_name = "home"
 
-    return render_template("index.html", )
+    return render_template("index.html",)
 
 
 @app.route("/get_data")
@@ -50,16 +58,21 @@ def data_access():
 
         if request_start:
             base_cmd = base_cmd.filter(
-                models.Wind.SCEDTimeStamp >= dt.datetime.strptime(request_start, "%Y-%m-%d")
+                models.Wind.SCEDTimeStamp
+                >= dt.datetime.strptime(request_start, "%Y-%m-%d")
             )
 
         if request_end:
             base_cmd = base_cmd.filter(
-                models.Wind.SCEDTimeStamp < (dt.datetime.strptime(request_end, "%Y-%m-%d") + dt.timedelta(days=1))
+                models.Wind.SCEDTimeStamp
+                < (dt.datetime.strptime(request_end, "%Y-%m-%d") + dt.timedelta(days=1))
             )
 
         results = base_cmd.all()
-        data = {result.SCEDTimeStamp.isoformat(): result.to_dict(False) for result in results}
+        data = {
+            result.SCEDTimeStamp.isoformat(): result.to_dict(False)
+            for result in results
+        }
 
         return jsonify(data)
 
@@ -69,11 +82,11 @@ def data_access():
 
 @app.route("/data")
 def data():
-    
+
     global referring_func_name
     referring_func_name = "data"
 
-    return render_template("data.html", )
+    return render_template("data.html",)
 
 
 @app.route("/timeseries")
@@ -83,52 +96,47 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    results = app.session.query(models.Wind)\
-        .filter(models.Wind.System_Wide != 0)\
-        .all()
+    results = app.session.query(models.Wind).filter(models.Wind.System_Wide != 0).all()
 
     trace1 = {
         "x": [result.SCEDTimeStamp for result in results],
         "y": [result.SystemLambda for result in results],
-        "name": 'System Lambda ($/MWh)',
-        "type": "scatter"
+        "name": "System Lambda ($/MWh)",
+        "type": "scatter",
     }
 
     trace2 = {
         "x": [result.SCEDTimeStamp for result in results],
         "y": [result.System_Wide for result in results],
-        "name": 'Wind Generation (GW)',
+        "name": "Wind Generation (GW)",
         "type": "scatter",
-        "yaxis": "y2"
+        "yaxis": "y2",
     }
 
     layout = {
-      "title": "Wind Generation and System Lambda vs. Time",
-      "xaxis": {
-          "title": "Timestamp"
-      },
-      "yaxis": {
-          "title": "System Lambda ($/MWh)",
-          "titlefont": {"color": "#1f77b4"},
-          "tickfont": {"color": "#1f77b4"},
-          "range": [-100, 1000],
-          "tick0": 0,
-          "dtick": 100
-          
-      },
-      "yaxis2": {
-          "title": "Wind Generation (GW)",
-          "titlefont": {"color": "#ff7f0e"},
-          "tickfont": {"color": "#ff7f0e"},
-          "range": [-2000, 20000],
-          "tick0": 0,
-          "dtick": 2000,
-          "overlaying": "y",
-          "side": "right"
-      },
-      "height": 700
-      }
-    
+        "title": "Wind Generation and System Lambda vs. Time",
+        "xaxis": {"title": "Timestamp"},
+        "yaxis": {
+            "title": "System Lambda ($/MWh)",
+            "titlefont": {"color": "#1f77b4"},
+            "tickfont": {"color": "#1f77b4"},
+            "range": [-100, 1000],
+            "tick0": 0,
+            "dtick": 100,
+        },
+        "yaxis2": {
+            "title": "Wind Generation (GW)",
+            "titlefont": {"color": "#ff7f0e"},
+            "tickfont": {"color": "#ff7f0e"},
+            "range": [-2000, 20000],
+            "tick0": 0,
+            "dtick": 2000,
+            "overlaying": "y",
+            "side": "right",
+        },
+        "height": 700,
+    }
+
     data = [trace1, trace2]
     data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -142,29 +150,23 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-    results = app.session.query(models.Wind)\
-        .filter(models.Wind.System_Wide != 0)\
-        .all()
+    results = app.session.query(models.Wind).filter(models.Wind.System_Wide != 0).all()
 
     trace = {
         "x": [result.System_Wide for result in results],
         "y": [result.SystemLambda for result in results],
         "text": [result.SCEDTimeStamp for result in results],
         "mode": "markers",
-        "type": "scatter"
+        "type": "scatter",
     }
 
     layout = {
         "title": "System Lambda vs. Wind Generation",
-        "xaxis": {
-            "title": "Wind Generation (GW)"
-        },
-        "yaxis": {
-            "title": "System Lambda ($/MWh)"
-        },
+        "xaxis": {"title": "Wind Generation (GW)"},
+        "yaxis": {"title": "System Lambda ($/MWh)"},
         "height": 700,
     }
-      
+
     data = [trace]
     data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -185,7 +187,11 @@ def scrape():
     # load into db
     load.csv_db()
 
-    return redirect(url_for(referring_func_name)) if referring_func_name else "Database import complete!"
+    return (
+        redirect(url_for(referring_func_name))
+        if referring_func_name
+        else "Database import complete!"
+    )
 
 
 @app.teardown_appcontext
