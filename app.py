@@ -21,6 +21,7 @@ import load
 import clean_data
 import json
 import plotly
+import numpy
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -169,9 +170,37 @@ def plot2():
     trace = {
         "x": [result.System_Wide for result in results],
         "y": [result.SystemLambda for result in results],
+        "name": "Observed Data Point",
         "text": [result.SCEDTimeStamp for result in results],
         "mode": "markers",
         "type": "scatter",
+    }
+
+    # determine trendline coefficients for a linear fit
+    trendline_coeff = numpy.polyfit(
+        x=[result.System_Wide for result in results],
+        y=[result.SystemLambda for result in results],
+        deg=1
+    )
+    
+    # grab the x range for the dataset
+    trendline_x = [
+        min([result.System_Wide for result in results]),
+        max([result.System_Wide for result in results])
+    ]
+
+    # use x range and trendline coefficients to get y values of trendline
+    trendline_y = trendline_coeff[1] + numpy.multiply(trendline_coeff[0], trendline_x)
+
+    trace_trendline = {
+        "x": trendline_x,
+        "y": trendline_y,
+        "name": "Trendline",
+        "mode": "lines",
+        "line": {
+            "color": 'red',
+            "width": 3
+        }
     }
 
     layout = {
@@ -192,9 +221,14 @@ def plot2():
             },
         },
         "height": 700,
+        "legend": {
+            "x": 0,
+            "y": 1,
+            "orientation": "h"
+        }
     }
 
-    data = [trace]
+    data = [trace, trace_trendline]
     data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
     return render_template("plot2.html", data_json=data_json, layout=layout)

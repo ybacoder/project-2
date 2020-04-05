@@ -22,6 +22,7 @@ flask-cors = "*"
 redis = "*"
 rq = "*"
 utils = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
