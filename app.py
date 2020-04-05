@@ -80,7 +80,11 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    results = app.session.query(models.Wind)\
+    results = app.session.query(
+            models.Wind.SCEDTimeStamp,
+            models.Wind.System_Wide,
+            models.Wind.SystemLambda
+        )\
         .filter(models.Wind.System_Wide != 0)\
         .all()
 
@@ -128,7 +132,10 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-    results = app.session.query(models.Wind)\
+    results = app.session.query(
+            models.Wind.System_Wide,
+            models.Wind.SystemLambda
+        )\
         .filter(models.Wind.System_Wide != 0)\
         .all()
 
