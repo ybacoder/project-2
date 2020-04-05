@@ -111,12 +111,18 @@ def plot1():
           "title": "System Lambda ($/MWh)",
           "titlefont": {"color": "#1f77b4"},
           "tickfont": {"color": "#1f77b4"},
+          "range": [-100, 1000],
+          "tick0": 0,
+          "dtick": 100
           
       },
       "yaxis2": {
           "title": "Wind Generation (GW)",
           "titlefont": {"color": "#ff7f0e"},
           "tickfont": {"color": "#ff7f0e"},
+          "range": [-2000, 20000],
+          "tick0": 0,
+          "dtick": 2000,
           "overlaying": "y",
           "side": "right"
       },
