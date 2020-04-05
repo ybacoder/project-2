@@ -149,6 +149,7 @@ def plot2():
     trace = {
         "x": [result.System_Wide for result in results],
         "y": [result.SystemLambda for result in results],
+        "text": [result.SCEDTimeStamp for result in results],
         "mode": "markers",
         "type": "scatter"
     }
