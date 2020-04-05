@@ -1,196 +1,272 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Texas Wind Energy</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
+<html lang="en">
 
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Texas Wind Energy and Prices</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active" href="#"
-              >Home<span class="sr-only">(current)</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="data">Data</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="scrape">Data Scrape</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Plot Visualizations
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="timeseries">Time Series</a>
-              <a class="dropdown-item" href="correlation">Correlation</a>
-            </div>
-          </li>
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Texas Wind Energy</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../static/img/favicon.png" rel="icon">
+  <link href="../static/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="../static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../static/vendor/venobox/venobox.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link rel="stylesheet" href="../static/css/style.css">
+
+  <!-- =======================================================
+  * Template Name: Regna - v2.0.0
+  * Template URL: https://bootstrapmade.com/regna-bootstrap-onepage-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header">
+    <div class="container">
+
+      <div id="logo" class="pull-left">
+        <a href="#hero"><img src="../static/img/logo.png" alt=""></a>
+        <!-- Uncomment below if you prefer to use a text logo -->
+        <!--<h1><a href="#hero">Regna</a></h1>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="/">Home</a></li>
+          <li><a href="scrape">Scrape Data</a></li>
+          <li><a href="data">View Data</a></li>
+          <li><a href="timeseries">Time Series Plot</a></li>
+          <li><a href="correlation">Correlation Plot</a></li>
         </ul>
-      </div>
-    </nav>
-    <div>
-      <div class="text-right">
-        <a
-          href="https://github.com/ybacoder/project-2"
-          rel="noreferrer"
-          target="_blank"
-        >
-          <img
-            width="149"
-            height="149"
-            src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png?resize=149%2C149"
-            class="attachment-full size-full"
-            alt="Fork me on GitHub"
-            data-recalc-dims="1"
-          />
-        </a>
-      </div>
-      <br />
-      <div class="row">
-        <div class="container">
-          <div class="logo">
-            <h2 class="HomeHeader">Texas Wind Energy Home Page</h2>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container">
+      <h1>Welcome to Regna</h1>
+      <h2>We are team of talanted designers making websites with Bootstrap</h2>
+      <a href="#about" class="btn-get-started">Get Started</a>
+    </div>
+  </section><!-- End Hero Section -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about">
+      <div class="container">
+        <div class="row about-container">
+
+          <div class="col-lg-6 content order-lg-1 order-2">
+            <h2 class="title">Few Words About Us</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+
+            <div class="icon-box wow fadeInUp">
+              <div class="icon"><i class="fa fa-shopping-bag"></i></div>
+              <h4 class="title"><a href="">Eiusmod Tempor</a></h4>
+              <p class="description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
+            </div>
+
+            <div class="icon-box wow fadeInUp" data-wow-delay="0.2s">
+              <div class="icon"><i class="fa fa-photo"></i></div>
+              <h4 class="title"><a href="">Magni Dolores</a></h4>
+              <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+            </div>
+
+            <div class="icon-box wow fadeInUp" data-wow-delay="0.4s">
+              <div class="icon"><i class="fa fa-bar-chart"></i></div>
+              <h4 class="title"><a href="">Dolor Sitema</a></h4>
+              <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
+            </div>
+
           </div>
+
+          <div class="col-lg-6 background order-lg-2 order-1 wow fadeInRight"></div>
         </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= Facts Section ======= -->
+    <section id="facts">
+      <div class="container wow fadeIn">
+        <div class="section-header">
+          <h3 class="section-title">Facts</h3>
+          <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+        </div>
+        <div class="row counters">
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-toggle="counter-up">232</span>
+            <p>Clients</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-toggle="counter-up">521</span>
+            <p>Projects</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-toggle="counter-up">1,463</span>
+            <p>Hours Of Support</p>
+          </div>
+
+          <div class="col-lg-3 col-6 text-center">
+            <span data-toggle="counter-up">15</span>
+            <p>Hard Workers</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Facts Section -->
+
+    <!-- ======= Timeseries Section ======= -->
+    <!-- End Timeseries Section -->
+
+    <!-- ======= Correlation Section ======= -->
+    <!-- Correlation Section -->
+
+    <!-- ======= Portfolio Section ======= -->
+    <!-- End Portfolio Section -->
+
+    <!-- ======= Team Section ======= -->
+    <section id="team">
+      <div class="container wow fadeInUp">
+        <div class="section-header">
+          <h3 class="section-title">Meet the Team</h3>
+          <p class="section-description">Students of the UT Austin Data Analytics and Visualization Program</p>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="member">
+              <div class="pic"><img src="../static/img/Yacub.png" alt=""></div>
+              <h4>Yacub Bholat</h4>
+              <span>Cool Dude</span>
+              <div class="social">
+                <a href="https://github.com/ybacoder"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="member">
+              <div class="pic"><img src="../static/img/Allie.png" alt=""></div>
+              <h4>Allie Kennedy</h4>
+              <span>Cool Chick</span>
+              <div class="social">
+                <a href="https://github.com/akkheyy"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="member">
+              <div class="pic"><img src="../static/img/Eric.png" alt=""></div>
+              <h4>Eric Nordstrom</h4>
+              <span>Cool Dude</span>
+              <div class="social">
+                <a href="https://github.com/eanord4"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="member">
+              <div class="pic"><img src="../static/img/Erin.png" alt=""></div>
+              <h4>Erin Oefelein</h4>
+              <span>Cool Chick</span>
+              <div class="social">
+                <a href="https://github.com/eoefelein"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="member">
+              <div class="pic"><img src="../static/img/team-4.jpg" alt=""></div>
+              <h4>Anne Oluwole</h4>
+              <span>Cool Chick</span>
+              <div class="social">
+                <a href="https://github.com/oluwa714"><i class="fa fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <!-- End Contact Section -->
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+
       </div>
     </div>
 
     <div class="container">
-      <!--Normally these medium columns go full wide on small screen sizes-->
-      <div class="row">
-        <div class="col-md-4">
-          <img
-            src="../static/images/JohnDeere_006-medium.jpg"
-            width="350"
-            height="300"
-          />
-        </div>
-        <div class="col-md-8">
-          <div class="box skyblue"></div>
-          From the Hill Country to the Great Plains and Mountains, Texas makes
-          up approximately 7% of the total water and land area of the US, an
-          area only second to Alaska. With the varying topography and climate,
-          it's no wonder Texas leads the nation in Energy production from oil
-          and natural gas, to coal, wind and solar. According to the US Energy
-          Information Administation (US EIA), Texas makes up 20% of US
-          domestically produced Energy and is the leading producer of wind
-          generated electricity.
-        </div>
+      <div class="copyright">
+        &copy; Copyright <strong>Regna</strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!--
+        All the links in the footer should remain intact.
+        You can delete the links only if you purchased the pro version.
+        Licensing information: https://bootstrapmade.com/license/
+        Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Regna
+      -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>
+  </footer><!-- End Footer -->
 
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8">
-          <div class="box skyblue">
-            Due to the vaying nature of wind, you might wonder how the renewable
-            source of energy plays a role in the energy prices you see as a
-            consumer. Generally speaking, when the wind blows, and wind turbines
-            spin to generate power, you might expect the overall cost of energy
-            to drop. And vice versa, when the wind isn't blowing as the energy
-            supply is dependant on more traditional sources, the costs then
-            might go up. But by how much? <br />Our project will scrape ERCOT
-            data into a database and try to find a correlation between the
-            amount of wind generated in gigawatts (GW) over a period of time and
-            also systemwide price of energy.
-          </div>
-        </div>
-        <div class="col-md-4">
-          <img
-            src="../static/images/business-candle-stick-graph-chart-600w-1006988995.jpg"
-            width="350"
-            height="300"
-          />
-        </div>
-      </div>
-    </div>
-    <div>
-      <p></p>
-      <p></p>
-    </div>
-    <footer class="site-footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12 col-md-6">
-            <h6>About</h6>
-            <p class="text-justify">
-              Texas Wind Energy is a project created by Team YEEAA. Yacub
-              Bholat, Eric Nordstrom, Erin Oefelein, Allie K and Anne Oluwole.
-            </p>
-          </div>
+  <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
 
-          <div class="col-xs-6 col-md-3">
-            <h6>Team Member Individual Pages</h6>
-            <ul class="footer-links">
-              <li><a href="https://github.com/ybacoder">Yacub</a></li>
-              <li><a href="https://github.com/eanord4">Eric</a></li>
-              <li><a href="https://github.com/eoefelein">Erin</a></li>
-              <li><a href="https://github.com/akkheyy">Allie</a></li>
-              <li><a href="http://github.com/oluwa714">Anne</a></li>
-            </ul>
-          </div>
-        </div>
-        <hr />
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-8 col-sm-6 col-xs-12">
-            <p class="copyright-text">
-              Copyright &copy; 2020 All Rights Reserved by Trinity
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
+  <!-- Vendor JS Files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="../static/vendor/jquery/jquery.min.js"></script>
+  <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="../static/vendor/php-email-form/validate.js"></script>
+  <script src="../static/vendor/counterup/counterup.min.js"></script>
+  <script src="../static/vendor/wow/wow.min.js"></script>
+  <script src="../static/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="../static/vendor/superfish/superfish.min.js"></script>
+  <script src="../static/vendor/hoverIntent/hoverIntent.js"></script>
+  <script src="../static/vendor/venobox/venobox.min.js"></script>
 
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+  <!-- Template Main JS File -->
+  <script src="../static/js/main.js"></script>
+
+</body>
+
 </html>
