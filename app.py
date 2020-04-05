@@ -115,10 +115,21 @@ def plot1():
 
     layout = {
         "title": "Wind Generation and System Lambda vs. Time",
-        "xaxis": {"title": "Timestamp"},
+        "titlefont": {
+            "size": 24
+        },
+        "xaxis": {
+            "title": "Timestamp",
+            "titlefont": {
+                "size": 16
+            },
+        },
         "yaxis": {
             "title": "System Lambda ($/MWh)",
-            "titlefont": {"color": "#1f77b4"},
+            "titlefont": {
+                "color": "#1f77b4",
+                "size": 16
+            },
             "tickfont": {"color": "#1f77b4"},
             "range": [-100, 1000],
             "tick0": 0,
@@ -126,7 +137,10 @@ def plot1():
         },
         "yaxis2": {
             "title": "Wind Generation (GW)",
-            "titlefont": {"color": "#ff7f0e"},
+            "titlefont": {
+                "color": "#ff7f0e",
+                "size": 16
+            },
             "tickfont": {"color": "#ff7f0e"},
             "range": [-2000, 20000],
             "tick0": 0,
@@ -162,8 +176,21 @@ def plot2():
 
     layout = {
         "title": "System Lambda vs. Wind Generation",
-        "xaxis": {"title": "Wind Generation (GW)"},
-        "yaxis": {"title": "System Lambda ($/MWh)"},
+        "titlefont": {
+            "size": 24
+        },
+        "xaxis": {
+            "title": "Wind Generation (GW)",
+            "titlefont": {
+                "size": 16
+            },
+        },
+        "yaxis": {
+            "title": "System Lambda ($/MWh)",
+            "titlefont": {
+                "size": 16
+            },
+        },
         "height": 700,
     }
 
