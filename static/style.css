@@ -37,3 +37,7 @@ footer{
 p.copyright-text{
     font-size: small;
 }
+
+body {
+    padding-top: 50px;
+}
