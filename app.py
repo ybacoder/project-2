@@ -112,7 +112,6 @@ def plot1():
       },
       "yaxis2": {
           "title": "Wind Generation (GW)",
-          "anchor": "x",
           "titlefont": {"color": "#ff7f0e"},
           "tickfont": {"color": "#ff7f0e"},
           "overlaying": "y",
