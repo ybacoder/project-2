@@ -105,10 +105,16 @@ def plot1():
           "title": "Timestamp"
       },
       "yaxis": {
-          "title": "System Lambda ($/MWh)"
+          "title": "System Lambda ($/MWh)",
+          "titlefont": {"color": "#1f77b4"},
+          "tickfont": {"color": "#1f77b4"},
+          
       },
       "yaxis2": {
           "title": "Wind Generation (GW)",
+          "anchor": "x",
+          "titlefont": {"color": "#ff7f0e"},
+          "tickfont": {"color": "#ff7f0e"},
           "overlaying": "y",
           "side": "right"
       },
