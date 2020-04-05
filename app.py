@@ -69,6 +69,9 @@ def data_access():
 
 @app.route("/data")
 def data():
+    
+    global referring_func_name
+    referring_func_name = "data"
 
     return render_template("data.html", )
 
