@@ -23,6 +23,7 @@ redis = "*"
 rq = "*"
 utils = "*"
 numpy = "*"
+statsmodels = "*"
 
 [requires]
 python_version = "3.7"

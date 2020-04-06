@@ -82,7 +82,7 @@
     <center><div id="plot"></div></center>
     <script>
       plot_div = document.getElementById('plot');
-      Plotly.newPlot(plot_div, {{ data_json | safe }}, {{ layout | safe }});
+      Plotly.newPlot(plot_div, {{ data | safe }}, {{ layout | safe }});
     </script>
   </body>
 </html>
