@@ -109,7 +109,8 @@ def plot1():
           "title": "Timestamp"
       },
       "yaxis": {
-          "title": "System Lambda ($/MWh)"
+          "title": "System Lambda ($/MWh)",
+          "type": "log"
       },
       "yaxis2": {
           "title": "Wind Generation (GW)",
