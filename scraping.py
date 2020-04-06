@@ -31,7 +31,9 @@ from urllib.request import urlopen
 LAMBDA_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13114&reportTitle=SCED%20System%20Lambda&showHTMLView=&mimicKey"
 WIND_5MIN_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13071&reportTitle=Wind%20Power%20Production%20-%20Actual%205-Minute%20Averaged%20Values&showHTMLView=&mimicKey"
 WIND_HOURLY_URL = "http://mis.ercot.com/misapp/GetReports.do?reportTypeId=13028&reportTitle=Wind%20Power%20Production%20-%20Hourly%20Averaged%20Actual%20and%20Forecasted%20Values&showHTMLView=&mimicKey"
-_ERCOT_BASE_URL = "http://mis.ercot.com"  # required as scraped links don't include this part
+_ERCOT_BASE_URL = (
+    "http://mis.ercot.com"  # required as scraped links don't include this part
+)
 
 
 def _file_dt(filename, now, year=None):
@@ -63,7 +65,9 @@ def _file_dt(filename, now, year=None):
     )
 
 
-def data_frame(zip_url):  # resource: https://techoverflow.net/2018/01/16/downloading-reading-a-zip-file-in-memory-using-python/
+def data_frame(
+    zip_url,
+):  # resource: https://techoverflow.net/2018/01/16/downloading-reading-a-zip-file-in-memory-using-python/
     """download an unpack the ZIP file in memory; return a DataFrame of the CSV contents"""
 
     # download ZIP file
