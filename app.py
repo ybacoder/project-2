@@ -276,7 +276,7 @@ def scrape():
     return (
         redirect(url_for(referring_func_name))
         if referring_func_name
-        else "Database import complete!"
+        else "Your scrape request has been queued."
     )
 
 
