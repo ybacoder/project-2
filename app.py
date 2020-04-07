@@ -23,6 +23,8 @@ import json
 import plotly
 import numpy
 import plotly.express as px
+from worker import conn
+from rq import Queue
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -33,6 +35,9 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 
 # for redirect after scraping
 referring_func_name = None
+
+# for background tasks
+queue = Queue(connection=conn)
 
 
 @app.route("/")
@@ -267,11 +272,11 @@ def scrape():
     # get "since" date to avoid longer-than-necessary scrapes
     since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
-    # scrape
-    clean_data.data_scrape(since)
+    # scrape & munge
+    queue.enqueue(clean_data.data_scrape, since)
 
     # load into db
-    load.csv_db()
+    queue.enqueue(load.csv_db)
 
     return (
         redirect(url_for(referring_func_name))
