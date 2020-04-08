@@ -5,7 +5,7 @@ from flask import (
     _app_ctx_stack,
     url_for,
     request,
-    redirect,
+    redirect
 )
 import scraping
 import pandas as pd
@@ -56,7 +56,15 @@ def data_access():
     request_end = request.args.get("end")
 
     try:
-        base_cmd = app.session.query(models.Wind)
+        base_cmd = app.session.query(
+            models.Wind.SCEDTimeStamp,
+            models.Wind.RepeatedHourFlag,
+            models.Wind.SystemLambda,
+            models.Wind.System_Wide,
+            models.Wind.LZ_North,
+            models.Wind.LZ_South_Houston,
+            models.Wind.LZ_West
+        )
 
         if request_start:
             base_cmd = base_cmd.filter(
@@ -71,10 +79,10 @@ def data_access():
             )
 
         results = base_cmd.all()
-        data = {
-            result.SCEDTimeStamp.isoformat(): result.to_dict(False)
+        data = [
+            {result.SCEDTimeStamp.isoformat(): result.to_dict(False)}
             for result in results
-        }
+        ]
 
         return jsonify(data)
 
@@ -88,7 +96,7 @@ def data():
     global referring_func_name
     referring_func_name = "data"
 
-    return render_template("data.html",)
+    return render_template("data.html")
 
 
 @app.route("/timeseries")
@@ -98,10 +106,6 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
     results = app.session.query(
             models.Wind.SCEDTimeStamp,
             models.Wind.System_Wide,
@@ -176,90 +180,20 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-<<<<<<< HEAD
-    results = app.session.query(
-=======
     df = pd.read_sql(
         
         app.session.query(
->>>>>>> master
             models.Wind.System_Wide,
             models.Wind.SystemLambda
-        )\
-        .filter(models.Wind.System_Wide != 0)\
+        )
+        .filter(models.Wind.System_Wide != 0)
         .statement,
 
         con = engine
 
     )
 
-    print(df.head())  ###
-
     fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", log_y=True, trendline="ols").to_dict()
-
-    # trace = {
-    #     "x": [result.System_Wide for result in results],
-    #     "y": [result.SystemLambda for result in results],
-    #     "name": "Observed Data Point",
-    #     "text": [result.SCEDTimeStamp for result in results],
-    #     "mode": "markers",
-    #     "type": "scatter",
-    # }
-
-    # # determine trendline coefficients for a linear fit
-    # trendline_coeff = numpy.polyfit(
-    #     x=[result.System_Wide for result in results],
-    #     y=[result.SystemLambda for result in results],
-    #     deg=1
-    # )
-    
-    # # grab the x range for the dataset
-    # trendline_x = [
-    #     min([result.System_Wide for result in results]),
-    #     max([result.System_Wide for result in results])
-    # ]
-
-    # # use x range and trendline coefficients to get y values of trendline
-    # trendline_y = trendline_coeff[1] + numpy.multiply(trendline_coeff[0], trendline_x)
-
-    # trace_trendline = {
-    #     "x": trendline_x,
-    #     "y": trendline_y,
-    #     "name": "Trendline",
-    #     "mode": "lines",
-    #     "line": {
-    #         "color": 'red',
-    #         "width": 3
-    #     }
-    # }
-
-    # layout = {
-    #     "title": "System Lambda vs. Wind Generation",
-    #     "titlefont": {
-    #         "size": 24
-    #     },
-    #     "xaxis": {
-    #         "title": "Wind Generation (GW)",
-    #         "titlefont": {
-    #             "size": 16
-    #         },
-    #     },
-    #     "yaxis": {
-    #         "title": "System Lambda ($/MWh)",
-    #         "titlefont": {
-    #             "size": 16
-    #         },
-    #     },
-    #     "height": 700,
-    #     "legend": {
-    #         "x": 0,
-    #         "y": 1,
-    #         "orientation": "h"
-    #     }
-    # }
-
-    # data = [trace, trace_trendline]
-    
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
     layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
 
