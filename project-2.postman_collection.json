@@ -11,7 +11,128 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "http://127.0.0.1:5000/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "correlation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/correlation",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"correlation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "data_start_end",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_data?start=2020-03-25&end=2020-03-26",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_data"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2020-03-25"
+						},
+						{
+							"key": "end",
+							"value": "2020-03-26"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "data_start_only",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_data?start=2020-03-25",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_data"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2020-03-25"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "data_end_only",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/get_data?end=2020-03-26",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get_data"
+					],
+					"query": [
+						{
+							"key": "end",
+							"value": "2020-03-26"
+						}
+					]
 				}
 			},
 			"response": []
