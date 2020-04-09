@@ -68,11 +68,11 @@
           <p class="section-description">The correlation plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda).</p>
         </div>
         <body>
-          <center><div id="plot"></div></center>
-          <script>
-            plot_div = document.getElementById('plot');
-            Plotly.newPlot(plot_div, {{ data_json | safe }}, {{ layout | safe }});
-          </script>
+            <center><div id="plot"></div></center>
+            <script>
+              plot_div = document.getElementById('plot');
+              Plotly.newPlot(plot_div, {{ data | safe }}, {{ layout | safe }});
+            </script>
         </body>
       </div>
     </section><!-- End Correlation Section -->

@@ -22,6 +22,9 @@ import clean_data
 import json
 import plotly
 import numpy
+import plotly.express as px
+from worker import conn
+from rq import Queue
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -32,6 +35,9 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 
 # for redirect after scraping
 referring_func_name = None
+
+# for background tasks
+queue = Queue(connection=conn)
 
 
 @app.route("/")
@@ -97,7 +103,14 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    results = app.session.query(models.Wind).filter(models.Wind.System_Wide != 0).all()
+
+    results = app.session.query(
+            models.Wind.SCEDTimeStamp,
+            models.Wind.System_Wide,
+            models.Wind.SystemLambda
+        )\
+        .filter(models.Wind.System_Wide != 0)\
+        .all()
 
     trace1 = {
         "x": [result.SCEDTimeStamp for result in results],
@@ -165,73 +178,90 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-    results = app.session.query(models.Wind).filter(models.Wind.System_Wide != 0).all()
+    df = pd.read_sql(
+        
+        app.session.query(
+            models.Wind.System_Wide,
+            models.Wind.SystemLambda
+        )\
+        .filter(models.Wind.System_Wide != 0)\
+        .statement,
 
-    trace = {
-        "x": [result.System_Wide for result in results],
-        "y": [result.SystemLambda for result in results],
-        "name": "Observed Data Point",
-        "text": [result.SCEDTimeStamp for result in results],
-        "mode": "markers",
-        "type": "scatter",
-    }
+        con = engine
 
-    # determine trendline coefficients for a linear fit
-    trendline_coeff = numpy.polyfit(
-        x=[result.System_Wide for result in results],
-        y=[result.SystemLambda for result in results],
-        deg=1
     )
+
+    print(df.head())  ###
+
+    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", log_y=True, trendline="ols").to_dict()
+
+    # trace = {
+    #     "x": [result.System_Wide for result in results],
+    #     "y": [result.SystemLambda for result in results],
+    #     "name": "Observed Data Point",
+    #     "text": [result.SCEDTimeStamp for result in results],
+    #     "mode": "markers",
+    #     "type": "scatter",
+    # }
+
+    # # determine trendline coefficients for a linear fit
+    # trendline_coeff = numpy.polyfit(
+    #     x=[result.System_Wide for result in results],
+    #     y=[result.SystemLambda for result in results],
+    #     deg=1
+    # )
     
-    # grab the x range for the dataset
-    trendline_x = [
-        min([result.System_Wide for result in results]),
-        max([result.System_Wide for result in results])
-    ]
+    # # grab the x range for the dataset
+    # trendline_x = [
+    #     min([result.System_Wide for result in results]),
+    #     max([result.System_Wide for result in results])
+    # ]
 
-    # use x range and trendline coefficients to get y values of trendline
-    trendline_y = trendline_coeff[1] + numpy.multiply(trendline_coeff[0], trendline_x)
+    # # use x range and trendline coefficients to get y values of trendline
+    # trendline_y = trendline_coeff[1] + numpy.multiply(trendline_coeff[0], trendline_x)
 
-    trace_trendline = {
-        "x": trendline_x,
-        "y": trendline_y,
-        "name": "Trendline",
-        "mode": "lines",
-        "line": {
-            "color": 'red',
-            "width": 3
-        }
-    }
+    # trace_trendline = {
+    #     "x": trendline_x,
+    #     "y": trendline_y,
+    #     "name": "Trendline",
+    #     "mode": "lines",
+    #     "line": {
+    #         "color": 'red',
+    #         "width": 3
+    #     }
+    # }
 
-    layout = {
-        "title": "System Lambda vs. Wind Generation",
-        "titlefont": {
-            "size": 24
-        },
-        "xaxis": {
-            "title": "Wind Generation (GW)",
-            "titlefont": {
-                "size": 16
-            },
-        },
-        "yaxis": {
-            "title": "System Lambda ($/MWh)",
-            "titlefont": {
-                "size": 16
-            },
-        },
-        "height": 700,
-        "legend": {
-            "x": 0,
-            "y": 1,
-            "orientation": "h"
-        }
-    }
+    # layout = {
+    #     "title": "System Lambda vs. Wind Generation",
+    #     "titlefont": {
+    #         "size": 24
+    #     },
+    #     "xaxis": {
+    #         "title": "Wind Generation (GW)",
+    #         "titlefont": {
+    #             "size": 16
+    #         },
+    #     },
+    #     "yaxis": {
+    #         "title": "System Lambda ($/MWh)",
+    #         "titlefont": {
+    #             "size": 16
+    #         },
+    #     },
+    #     "height": 700,
+    #     "legend": {
+    #         "x": 0,
+    #         "y": 1,
+    #         "orientation": "h"
+    #     }
+    # }
 
-    data = [trace, trace_trendline]
-    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    # data = [trace, trace_trendline]
+    
+    data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
+    layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template("plot2.html", data_json=data_json, layout=layout)
+    return render_template("plot2.html", data=data, layout=layout)
 
 
 @app.route("/scrape")
@@ -242,16 +272,16 @@ def scrape():
     # get "since" date to avoid longer-than-necessary scrapes
     since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
-    # scrape
-    clean_data.data_scrape(since)
+    # scrape & munge
+    queue.enqueue(clean_data.data_scrape, since)
 
     # load into db
-    load.csv_db()
+    queue.enqueue(load.csv_db)
 
     return (
         redirect(url_for(referring_func_name))
         if referring_func_name
-        else "Database import complete!"
+        else "Your scrape request has been queued."
     )
 
 
