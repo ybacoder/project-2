@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+black = "*"
 
 [packages]
 pandas = "*"
@@ -18,6 +19,13 @@ bs4 = "*"
 pymysql = "*"
 lxml = "*"
 flask-cors = "*"
+redis = "*"
+rq = "*"
+utils = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
