@@ -501,7 +501,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 #about .about-container .background {
   min-height: 300px;
-  background: url(../img/about-img.jpg) center top no-repeat;
+  background: url(../images/JohnDeere_006-medium.jpg) center/100% no-repeat;
   margin-bottom: 10px;
 }
 
@@ -688,7 +688,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 #team .member .social {
-  margin-top: 15px;
+  margin-top: auto;
 }
 
 #team .member .social a {
@@ -700,7 +700,7 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 #team .member .social i {
-  font-size: 18px;
+  font-size: auto;
   margin: 0 2px;
 }
 
