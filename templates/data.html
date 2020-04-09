@@ -10,8 +10,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="../static/img/favicon.png" rel="icon">
-  <link href="../static/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="../static/images/favicon.png" rel="icon">
+  <link href="../static/images/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
@@ -41,48 +41,51 @@
     <div class="container">
 
       <div id="logo" class="pull-left">
-        <h2><a href="#hero">Texas Wind Energy</a></h2>
+        <h2><a href="/#">Texas Wind Energy</a></h2>
       </div>
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-          <li><a href="/">Home</a></li>
-          <li class="menu-active"><a href="scrape">Scrape Data</a></li>
-          <li><a href="data">View Data</a></li>
+          <li><a href="/#">Home</a></li>
+          <li><a href="scrape">Scrape Data</a></li>
+          <li class="menu-active"><a href="data">View Data</a></li>
           <li><a href="timeseries">Time Series Plot</a></li>
           <li><a href="correlation">Correlation Plot</a></li>
+          <li><a href="/#team">Meet the Team</a></li>
+          <li><a href="https://github.com/ybacoder/project-2" rel="noreferrer" target="_blank"> Fork me on Github</a></li>
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
   </header><!-- End Header -->
-        <div class="col-md-4"></div>
-        <center>
-            <div class="col-md-4">
-              <form>
-                <div class="form-group">
-                  <ul class="list-group" id="filters">
-                    <li class="filter list-group-item">
-                      <label for="start_date">Enter a Start Date</label>
-                      <input class="form-control" id="start" type="text" placeholder="2020-03-25">
-                    </li>
-                  </ul>
-                  <ul class="list-group" id="filters">
-                    <li class="filter list-group-item">
-                      <label for="end_date">Enter an End Date</label>
-                      <input class="form-control" id="end" type="text" text-align="center" placeholder="2020-03-26">
-                    </li>
-                  </ul>
-                  <button id="filter-btn" type="button" class="btn btn-default">Get Data</button>
-                </div>
-              </form>
-            </div>
-        </center>
-        <div class="col-md-4"></div>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
-      <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <div class="col-md-4"></div>
+  <center>
+      <div class="col-md-4">
+        <form>
+          <div class="form-group">
+            <ul class="list-group" id="filters">
+              <li class="filter list-group-item">
+                <label for="start_date">Enter a Start Date</label>
+                <input class="form-control" id="start" type="text" placeholder="2020-03-25">
+              </li>
+            </ul>
+            <ul class="list-group" id="filters">
+              <li class="filter list-group-item">
+                <label for="end_date">Enter an End Date</label>
+                <input class="form-control" id="end" type="text" text-align="center" placeholder="2020-03-26">
+              </li>
+            </ul>
+            <button id="filter-btn" type="button" class="btn btn-default">Get Data</button>
+          </div>
+        </form>
+      </div>
+  </center>
+  <div class="col-md-4"></div>
 
-        <!-- ======= Footer ======= -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+  <!-- ======= Footer ======= -->
   <footer id="footer">
     <div class="footer-top">
       <div class="container">
