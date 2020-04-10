@@ -25,6 +25,7 @@ import numpy
 import plotly.express as px
 from worker import conn
 from rq import Queue
+import time
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -269,14 +270,17 @@ def scrape():
 
     global referring_func_name
 
-    # get "since" date to avoid longer-than-necessary scrapes
-    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
+    # # get "since" date to avoid longer-than-necessary scrapes
+    # since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
-    # scrape & munge
-    queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
+    # # scrape & munge
+    # queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
 
-    # load into db
-    queue.enqueue(load.csv_db)
+    # # load into db
+    # queue.enqueue(load.csv_db)
+
+    for i in range(1500):  # should time out unless each sleep is counted as a separate job
+        time.sleep(1)
 
     return (
         redirect(url_for(referring_func_name))
