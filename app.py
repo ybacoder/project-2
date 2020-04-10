@@ -278,11 +278,7 @@ def scrape():
     # load into db
     queue.enqueue(load.csv_db)
 
-    return (
-        redirect(url_for(referring_func_name))
-        if referring_func_name
-        else "Your scrape request has been queued."
-    )
+    return render_template("scrape.html", referring_func_name=referring_func_name)
 
 
 @app.teardown_appcontext
