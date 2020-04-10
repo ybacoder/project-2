@@ -2,10 +2,7 @@ import load
 import csv
 import datetime
 import pandas as pd
-
 import scraping
-from worker import conn
-from rq import Queue
 
 import models
 from database import SessionLocal, engine
@@ -13,12 +10,10 @@ from database import SessionLocal, engine
 db = SessionLocal()
 models.Base.metadata.create_all(bind=engine)
 
-q = Queue(connection=conn)
-
 
 def data_scrape(since):
-    lambda_scrape = q.enqueue(scraping.get_data, scraping.LAMBDA_URL, since=since)
-    wind_scrape = q.enqueue(scraping.get_data, scraping.WIND_5MIN_URL, since=since)
+    lambda_scrape = scraping.get_data(scraping.LAMBDA_URL, since=since)
+    wind_scrape = scraping.get_data(scraping.WIND_5MIN_URL, since=since)
 
     # Lambda Data Munging
     lambda_scrape_df = pd.DataFrame(
