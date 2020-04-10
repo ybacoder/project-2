@@ -60,16 +60,18 @@
   </header><!-- End Header -->
 
 <div class="container">
-    <div class="row py-5">
-      <div class="col-4 my-5"></div>
-      <center>
-      <div class="col-4 mt-5 pt-5">
-            <a class="btn btn-primary" href="{{ url_for(referring_func_name) }}" role="button">Back to {{ page_name }}</a>
-      </div>
-    </center>
-      <div class="col-4"></div>
-    </div>
-  </div>
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+  <center>
+    <h4>Your scrape request has been queued. This may take up to 10 minutes.</h4>
+    <a href="{{ url_for(referring_func_name) }}">
+      <button id="filter-btn" type="button" class="btn btn-secondary">Back to {{ page_name }}</button>
+    </a>
+  </center>
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+</div>
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
