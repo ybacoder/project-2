@@ -1,0 +1,1 @@
+const scrapeLink = d3.select("#scrape")

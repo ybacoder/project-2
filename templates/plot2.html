@@ -47,7 +47,7 @@
       <nav id="nav-menu-container">
         <ul class="nav-menu">
           <li><a href="/#">Home</a></li>
-          <li><a href="scrape">Scrape Data</a></li>
+          <li><a id="scrape" href="scrape">Scrape Data</a></li>
           <li><a href="data">View Data</a></li>
           <li><a href="timeseries">Time Series Plot</a></li>
           <li class="menu-active"><a href="correlation">Correlation Plot</a></li>
@@ -78,6 +78,10 @@
     </section><!-- End Correlation Section -->
 
   </main><!-- End #main -->
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
+  <script src="{{ url_for('static', filename='js/scrape.js') }}"></script>
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
