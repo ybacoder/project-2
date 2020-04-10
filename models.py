@@ -17,7 +17,7 @@ class DictMixIn:
 
 
 class Wind(Base, DictMixIn):
-    __tablename__ = "new_data"
+    __tablename__ = "wind_data"
 
     id = Column(Integer, primary_key=True, index=True)
     lambda_filename = Column(String(250), nullable=True)
