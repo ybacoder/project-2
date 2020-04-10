@@ -273,7 +273,9 @@ def scrape():
     since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
     # scrape & munge
-    queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
+    job = queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
+
+    print(job.result)  ### test
 
     # load into db
     queue.enqueue(load.csv_db)
