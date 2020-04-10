@@ -277,13 +277,13 @@ def scrape():
     global referring_func_name
 
     # get "since" date to avoid longer-than-necessary scrapes
-    # since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
+    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
-    # # scrape & munge
-    # queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
+    # scrape & munge
+    queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
 
-    # # load into db
-    # queue.enqueue(load.csv_db)
+    # load into db
+    queue.enqueue(load.csv_db)
 
     return render_template(
         "scrape.html",
