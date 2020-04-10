@@ -9,11 +9,6 @@
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
-  <!-- Anchor for scraping redirect -->
-  {% if referring_func_name %}
-  <a id="redirect" href="{{ url_for(referring_func_name) }}"></a>
-  {% endif %}
-
   <!-- Favicons -->
   <link href="../static/images/favicon.png" rel="icon">
   <link href="../static/images/apple-touch-icon.png" rel="apple-touch-icon">
@@ -64,9 +59,7 @@
     </div>
   </header><!-- End Header -->
 
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.js"></script>
-  <script src="{{ url_for('static', filename='js/scrape.js') }}"></script>
+  <!-- BUTTON HERE -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
