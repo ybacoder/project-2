@@ -34,7 +34,14 @@ CORS(app)
 app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func__)
 
 # for redirect after scraping
-referring_func_name = None
+referring_func_name = "home"
+page_names = {
+    'home': "Home Page",
+    'data': "Data Page",
+    'plot1': "Time Series Page",
+    'plot2': "Correlation Page",
+
+}
 
 # for background tasks
 queue = Queue(connection=conn)
@@ -269,19 +276,19 @@ def scrape():
 
     global referring_func_name
 
-    # get "since" date to avoid longer-than-necessary scrapes
-    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
+    # # get "since" date to avoid longer-than-necessary scrapes
+    # since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
 
-    # scrape & munge
-    queue.enqueue(clean_data.data_scrape, since)
+    # # scrape & munge
+    # queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
 
-    # load into db
-    queue.enqueue(load.csv_db)
+    # # load into db
+    # queue.enqueue(load.csv_db)
 
-    return (
-        redirect(url_for(referring_func_name))
-        if referring_func_name
-        else "Your scrape request has been queued."
+    return render_template(
+        "scrape.html",
+        referring_func_name=referring_func_name,
+        page_name=page_names[referring_func_name]
     )
 
 
