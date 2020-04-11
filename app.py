@@ -173,7 +173,7 @@ def plot1():
             "overlaying": "y",
             "side": "right",
         },
-        "height": 700,
+        "height": 600,
     }
 
     data = [trace1, trace2]
