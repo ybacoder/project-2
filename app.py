@@ -213,31 +213,15 @@ def plot2():
         app.session.query(
             models.Wind.System_Wide,
             models.Wind.SystemLambda
-        )
-        .filter(models.Wind.System_Wide != 0)
+        )\
+        .filter(models.Wind.System_Wide != 0)\
         .statement,
 
         con = engine
 
     )
 
-    fig_dict = px.scatter(
-
-        df,
-        height=600,
-        x="System_Wide",
-        y="SystemLambda",
-        log_y=True,
-        trendline="ols",
-        title="System-Wide Energy Prices vs. Wind Power Production",
-        template="simple_white",
-
-        labels = {
-            "System_Wide": "System-wide wind generation (MW)",
-            "SystemLambda": "System lambda ($/MWh)"
-        }
-
-    ).to_dict()
+    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
     
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
     layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
