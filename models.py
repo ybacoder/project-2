@@ -12,7 +12,8 @@ class DictMixIn:
             )
             else getattr(self, column.name).isoformat()
             for column in self.__table__.columns
-            if timestamp or column.name != "SCEDTimeStamp"
+            if timestamp
+            or column.name != "SCEDTimeStamp"
             and (column.name in columns or not columns)
         }
 

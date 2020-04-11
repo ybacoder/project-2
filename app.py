@@ -42,6 +42,7 @@ def scrape_and_load():
     clean_data.data_scrape(since)
     load.csv_db()
 
+
 # for redirect after scraping
 referring_func_name = "home"
 page_names = {
@@ -59,7 +60,7 @@ DATA_COLUMNS = [
     "LZ_South_Houston",
     "LZ_West",
     "LZ_North",
-    "DSTFlag"
+    "DSTFlag",
 ]
 
 
@@ -84,9 +85,7 @@ def data_access():
     request_end = request.args.get("end")
 
     try:
-        cmd = app.session.query(
-            models.Wind
-        )
+        cmd = app.session.query(models.Wind)
 
         if request_start:
             cmd = cmd.filter(
@@ -189,19 +188,26 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-    df = pd.read_sql(
-        app.session.query(models.Wind.System_Wide, models.Wind.SystemLambda, models.Wind.SCEDTimeStamp)
-        .filter(models.Wind.System_Wide != 0)
-        .filter(models.Wind.SystemLambda > 0)
-        .statement,
-        con=engine,
-    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))\
-    .assign(
-        System_Wide=lambda df: df.System_Wide / 1000  # convert to GW
-    ).assign(
-        LogSystemLambda=lambda df: df.SystemLambda.apply(numpy.log10)  # log scale on y-axis with actual log values for trendline
+    df = (
+        pd.read_sql(
+            app.session.query(
+                models.Wind.System_Wide,
+                models.Wind.SystemLambda,
+                models.Wind.SCEDTimeStamp,
+            )
+            .filter(models.Wind.System_Wide != 0)
+            .filter(models.Wind.SystemLambda > 0)
+            .statement,
+            con=engine,
+        )
+        .assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))
+        .assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
+        .assign(
+            LogSystemLambda=lambda df: df.SystemLambda.apply(
+                numpy.log10
+            )  # log scale on y-axis with actual log values for trendline
+        )
     )
-
 
     fig_dict = px.scatter(
         df,
@@ -210,15 +216,15 @@ def plot2():
         labels={
             "System_Wide": "Wind Generation (GW)",
             "LogSystemLambda": "log10( System Lambda ($/MWh) )",
-            "SCEDTimeStamp": "Hour"
+            "SCEDTimeStamp": "Hour",
         },
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
         color_continuous_scale=plotly.colors.cyclical.Edge,
-        opacity=.5,
-        height=700
+        opacity=0.5,
+        height=700,
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
