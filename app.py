@@ -203,6 +203,8 @@ def plot2():
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
+        color="System_Wide",
+        color_continuous_scale=[(0, "orange"), (1, "orange")]
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
