@@ -192,22 +192,26 @@ def plot2():
     df = pd.read_sql(
         app.session.query(models.Wind.System_Wide, models.Wind.SystemLambda, models.Wind.SCEDTimeStamp)
         .filter(models.Wind.System_Wide != 0)
+        .filter(models.Wind.SystemLambda > 0)
         .statement,
         con=engine,
-    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
-        lambda x: x.hour
-    )).assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
+    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))\
+    .assign(
+        System_Wide=lambda df: df.System_Wide / 1000  # convert to GW
+    ).assign(
+        LogSystemLambda=lambda df: df.SystemLambda.apply(numpy.log10)  # log scale on y-axis with actual log values for trendline
+    )
+
 
     fig_dict = px.scatter(
         df,
         x="System_Wide",
-        y="SystemLambda",
+        y="LogSystemLambda",
         labels={
             "System_Wide": "Wind Generation (GW)",
-            "SystemLambda": "System Lambda ($/MWh)",
+            "LogSystemLambda": "log10( System Lambda ($/MWh) )",
             "SCEDTimeStamp": "Hour"
         },
-        log_y=True,
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
