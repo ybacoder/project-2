@@ -211,7 +211,7 @@ def plot2():
 
     )
 
-    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
+    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="simple_white", title="System Lambda vs. Wind Generation").to_dict()
     
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
     layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
