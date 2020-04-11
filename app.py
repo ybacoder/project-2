@@ -217,7 +217,7 @@ def plot2():
             (0, "blue"),
             (12, "yellow"),
             (23.99, "blue")
-        ]
+        ],
         opacity=.5,
         height=700
     ).to_dict()
