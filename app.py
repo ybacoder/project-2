@@ -194,7 +194,9 @@ def plot2():
         .filter(models.Wind.System_Wide != 0)
         .statement,
         con=engine,
-    )
+    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
+        lambda x: x.timestamp()
+    ))
 
     fig_dict = px.scatter(
         df,
@@ -209,6 +211,7 @@ def plot2():
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
+        opacity=.5
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
