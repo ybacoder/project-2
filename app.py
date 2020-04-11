@@ -145,7 +145,7 @@ def plot1():
 
     trace2 = {
         "x": [result.SCEDTimeStamp for result in results],
-        "y": [result.System_Wide for result in results],
+        "y": [result.System_Wide / 1000 for result in results],  # convert to GW
         "name": "Wind Generation (GW)",
         "type": "scatter",
         "yaxis": "y2",
@@ -196,7 +196,7 @@ def plot2():
         con=engine,
     ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
         lambda x: x.hour
-    ))
+    )).assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
 
     fig_dict = px.scatter(
         df,

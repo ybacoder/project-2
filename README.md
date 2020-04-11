@@ -27,7 +27,7 @@ The data is scraped using from the csv zip files on the ERCOT webpage using requ
 
 #### Wind Generation and System Lambda vs. Time
 
-The time series plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda) at 5 minute time intervals for each day.
+The time series plot looks at wind generation and the system wide price of energy (System Lambda) at 5 minute time intervals throughout the day. This plot helps to understand the nature of how the data changes each passing moment.
 
 <img src= "/static/images/timeseries.png">
 
@@ -35,7 +35,7 @@ The time series plot looks at wind generation in gigawatts (GW) and the system w
 
 #### Wind Generation vs. System Lambda
 
-The correlation plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda).
+The correlation plot looks at the relationship *between* the System Lambda and wind generation. By including each quantity on a different axis, this plot allows the user to visualize the overall effect of wind on energy prices in ERCOT. The correlation plot also includes information about the time of day via the coloration of the data points.
 
 <img src= "/static/images/correlation.png">
 
@@ -45,4 +45,12 @@ The Texas Wind Energy web app is deployed via **Heroku**. It can be found [here]
 
 ## Final Thoughts
 
-Based on the energy data we have gathered so far, it appears that as wind generation increases, the price of energy slightyly decreases. Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen.
+### Results
+
+Based on the energy data we have gathered up until April 11th, 2020, it appears that **as wind generation increases, the price of energy decreases.** Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen, and the trendline on the correlation plot shows a steady decrease in price with wind generation.
+
+### Difficulties
+
+Although the correlation plot seems to show a clear correlation on this trendline, there are some imperfections in the way this is was obtained. Namely, the price axis must be logarithmic to easily visualize the trend; however, *some of the prices are negative* and thus have no logarithmic value. Therefore, the logarithmic adjustment of price has no mathematical basis and is only a convenient way to find a visual correlation. Despite this drawback, there are only a few data points with negative prices, so our correlation plot validates the idea that such a relationship could be uncovered after the underlying market and physical phenomena are more appropriately accounted for.
+
+To some extent, the time series plot provides what the correlation plot does not: an untampered record of both generation and price data as they occurred. Although it is not always best to "eyeball" correlations via a time series, in this case the time series makes up for the messiness of directly plotting the two quantities against each other.
