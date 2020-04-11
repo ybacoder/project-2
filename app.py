@@ -194,7 +194,11 @@ def plot2():
         .filter(models.Wind.System_Wide != 0)
         .statement,
         con=engine,
-    )
+    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
+        lambda x: x.timestamp()
+    ))
+
+    print(df.head())  ###
 
     fig_dict = px.scatter(
         df,
