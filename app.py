@@ -208,7 +208,7 @@ def plot2():
             "SCEDTimeStamp": "Hour"
         },
         log_y=True,
-        trendline="ols",
+        trendline="lowess",  # I am not familiar with this type of trendline but haven't found another nonlinear trendline for Plotly yet.
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
