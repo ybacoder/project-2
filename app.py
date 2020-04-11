@@ -212,6 +212,7 @@ def plot2():
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
+        color="SCEDTimeStamp"
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
