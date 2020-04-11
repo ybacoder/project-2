@@ -194,9 +194,11 @@ def plot2():
         .filter(models.Wind.System_Wide != 0)
         .statement,
         con=engine,
-    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
-        lambda x: x.hour
-    )).assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
+    ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))\
+    .assign(
+        System_Wide=lambda df: df.System_Wide / 1000  # convert to GW
+    ).assign(SystemLambda=lambda df: df.SystemLambda.apply(pd.np.log10))  # log scale on y-axis with actual log values for trendline
+
 
     fig_dict = px.scatter(
         df,
@@ -204,10 +206,9 @@ def plot2():
         y="SystemLambda",
         labels={
             "System_Wide": "Wind Generation (GW)",
-            "SystemLambda": "System Lambda ($/MWh)",
+            "SystemLambda": "log10(System Lambda, $/MWh)",
             "SCEDTimeStamp": "Hour"
         },
-        log_y=True,
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
