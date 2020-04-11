@@ -174,6 +174,7 @@ def plot1():
             "side": "right",
         },
         "height": 700,
+        "width": 1350
     }
 
     data = [trace1, trace2]
@@ -212,7 +213,8 @@ def plot2():
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
-        opacity=.5
+        opacity=.5,
+        height=700
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
