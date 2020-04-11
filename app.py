@@ -197,16 +197,18 @@ def plot2():
     ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))\
     .assign(
         System_Wide=lambda df: df.System_Wide / 1000  # convert to GW
-    ).assign(SystemLambda=lambda df: df.SystemLambda.apply(pd.np.log10))  # log scale on y-axis with actual log values for trendline
+    ).assign(
+        LogSystemLambda=lambda df: df.SystemLambda.apply(numpy.log10)  # log scale on y-axis with actual log values for trendline
+    ).dropna()
 
 
     fig_dict = px.scatter(
         df,
         x="System_Wide",
-        y="SystemLambda",
+        y="LogSystemLambda",
         labels={
             "System_Wide": "Wind Generation (GW)",
-            "SystemLambda": "log10(System Lambda, $/MWh)",
+            "LogSystemLambda": "log10( System Lambda ($/MWh) )",
             "SCEDTimeStamp": "Hour"
         },
         trendline="ols",
