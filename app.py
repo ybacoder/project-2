@@ -213,6 +213,11 @@ def plot2():
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
+        color_continuous_scale=[
+            (0, "blue"),
+            (12, "yellow"),
+            (23.99, "blue")
+        ]
         opacity=.5,
         height=700
     ).to_dict()
