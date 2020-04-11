@@ -33,16 +33,6 @@ app = Flask(__name__)
 CORS(app)
 app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func__)
 
-# for redirect after scraping
-referring_func_name = "home"
-page_names = {
-    'home': "Home Page",
-    'data': "Data Page",
-    'plot1': "Time Series Page",
-    'plot2': "Correlation Page",
-
-}
-
 # for background tasks
 queue = Queue(connection=conn)
 
@@ -51,6 +41,27 @@ def scrape_and_load():
     since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
     clean_data.data_scrape(since)
     load.csv_db()
+
+
+# for redirect after scraping
+referring_func_name = "home"
+page_names = {
+    "home": "Home Page",
+    "data": "Data Page",
+    "plot1": "Time Series Page",
+    "plot2": "Correlation Page",
+}
+
+# for `get_data` route (not all columns are necessary for users to see)
+DATA_COLUMNS = [
+    "SystemLambda",
+    "RepeatedHourFlag",
+    "System_Wide",
+    "LZ_South_Houston",
+    "LZ_West",
+    "LZ_North",
+    "DSTFlag",
+]
 
 
 @app.route("/")
@@ -74,25 +85,25 @@ def data_access():
     request_end = request.args.get("end")
 
     try:
-        base_cmd = app.session.query(models.Wind)
+        cmd = app.session.query(models.Wind)
 
         if request_start:
-            base_cmd = base_cmd.filter(
+            cmd = cmd.filter(
                 models.Wind.SCEDTimeStamp
                 >= dt.datetime.strptime(request_start, "%Y-%m-%d")
             )
 
         if request_end:
-            base_cmd = base_cmd.filter(
+            cmd = cmd.filter(
                 models.Wind.SCEDTimeStamp
                 < (dt.datetime.strptime(request_end, "%Y-%m-%d") + dt.timedelta(days=1))
             )
 
-        results = base_cmd.all()
-        data = {
-            result.SCEDTimeStamp.isoformat(): result.to_dict(False)
+        results = cmd.all()
+        data = [
+            {result.SCEDTimeStamp.isoformat(): result.to_dict(False, *DATA_COLUMNS)}
             for result in results
-        }
+        ]
 
         return jsonify(data)
 
@@ -106,7 +117,7 @@ def data():
     global referring_func_name
     referring_func_name = "data"
 
-    return render_template("data.html",)
+    return render_template("data.html")
 
 
 @app.route("/timeseries")
@@ -116,14 +127,13 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-
-    results = app.session.query(
-            models.Wind.SCEDTimeStamp,
-            models.Wind.System_Wide,
-            models.Wind.SystemLambda
-        )\
-        .filter(models.Wind.System_Wide != 0)\
+    results = (
+        app.session.query(
+            models.Wind.SCEDTimeStamp, models.Wind.System_Wide, models.Wind.SystemLambda
+        )
+        .filter(models.Wind.System_Wide != 0)
         .all()
+    )
 
     trace1 = {
         "x": [result.SCEDTimeStamp for result in results],
@@ -134,7 +144,7 @@ def plot1():
 
     trace2 = {
         "x": [result.SCEDTimeStamp for result in results],
-        "y": [result.System_Wide for result in results],
+        "y": [result.System_Wide / 1000 for result in results],  # convert to GW
         "name": "Wind Generation (GW)",
         "type": "scatter",
         "yaxis": "y2",
@@ -142,21 +152,11 @@ def plot1():
 
     layout = {
         "title": "Wind Generation and System Lambda vs. Time",
-        "titlefont": {
-            "size": 24
-        },
-        "xaxis": {
-            "title": "Timestamp",
-            "titlefont": {
-                "size": 16
-            },
-        },
+        "titlefont": {"size": 24},
+        "xaxis": {"title": "Timestamp", "titlefont": {"size": 16},},
         "yaxis": {
             "title": "System Lambda ($/MWh)",
-            "titlefont": {
-                "color": "#1f77b4",
-                "size": 16
-            },
+            "titlefont": {"color": "#1f77b4", "size": 16},
             "tickfont": {"color": "#1f77b4"},
             "range": [-100, 1000],
             "tick0": 0,
@@ -164,18 +164,15 @@ def plot1():
         },
         "yaxis2": {
             "title": "Wind Generation (GW)",
-            "titlefont": {
-                "color": "#ff7f0e",
-                "size": 16
-            },
+            "titlefont": {"color": "#ff7f0e", "size": 16},
             "tickfont": {"color": "#ff7f0e"},
-            "range": [-2000, 20000],
+            "range": [-2, 20],
             "tick0": 0,
-            "dtick": 2000,
+            "dtick": 2,
             "overlaying": "y",
             "side": "right",
         },
-        "height": 700,
+        "height": 600,
     }
 
     data = [trace1, trace2]
@@ -191,86 +188,47 @@ def plot2():
     global referring_func_name
     referring_func_name = "plot2"
 
-    df = pd.read_sql(
-        
-        app.session.query(
-            models.Wind.System_Wide,
-            models.Wind.SystemLambda
-        )\
-        .filter(models.Wind.System_Wide != 0)\
-        .statement,
-
-        con = engine
-
+    df = (
+        pd.read_sql(
+            app.session.query(
+                models.Wind.System_Wide,
+                models.Wind.SystemLambda,
+                models.Wind.SCEDTimeStamp,
+            )
+            .filter(models.Wind.System_Wide != 0)
+            .filter(models.Wind.SystemLambda > 0)
+            .statement,
+            con=engine,
+        )
+        .assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(lambda x: x.hour))
+        .assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
+        .assign(
+            LogSystemLambda=lambda df: df.SystemLambda.apply(
+                numpy.log10
+            )  # log scale on y-axis with actual log values for trendline
+        )
     )
 
-    print(df.head())  ###
+    fig_dict = px.scatter(
+        df,
+        x="System_Wide",
+        y="LogSystemLambda",
+        labels={
+            "System_Wide": "Wind Generation (GW)",
+            "LogSystemLambda": "log10( System Lambda ($/MWh) )",
+            "SCEDTimeStamp": "Hour",
+        },
+        trendline="ols",
+        template="simple_white",
+        title="System Lambda vs. Wind Generation",
+        color="SCEDTimeStamp",
+        color_continuous_scale=["blue", "yellow", "yellow", "blue"],
+        opacity=0.5,
+        height=700,
+        marginal_x="histogram",
+        marginal_y="histogram"
+    ).to_dict()
 
-    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
-
-    # trace = {
-    #     "x": [result.System_Wide for result in results],
-    #     "y": [result.SystemLambda for result in results],
-    #     "name": "Observed Data Point",
-    #     "text": [result.SCEDTimeStamp for result in results],
-    #     "mode": "markers",
-    #     "type": "scatter",
-    # }
-
-    # # determine trendline coefficients for a linear fit
-    # trendline_coeff = numpy.polyfit(
-    #     x=[result.System_Wide for result in results],
-    #     y=[result.SystemLambda for result in results],
-    #     deg=1
-    # )
-    
-    # # grab the x range for the dataset
-    # trendline_x = [
-    #     min([result.System_Wide for result in results]),
-    #     max([result.System_Wide for result in results])
-    # ]
-
-    # # use x range and trendline coefficients to get y values of trendline
-    # trendline_y = trendline_coeff[1] + numpy.multiply(trendline_coeff[0], trendline_x)
-
-    # trace_trendline = {
-    #     "x": trendline_x,
-    #     "y": trendline_y,
-    #     "name": "Trendline",
-    #     "mode": "lines",
-    #     "line": {
-    #         "color": 'red',
-    #         "width": 3
-    #     }
-    # }
-
-    # layout = {
-    #     "title": "System Lambda vs. Wind Generation",
-    #     "titlefont": {
-    #         "size": 24
-    #     },
-    #     "xaxis": {
-    #         "title": "Wind Generation (GW)",
-    #         "titlefont": {
-    #             "size": 16
-    #         },
-    #     },
-    #     "yaxis": {
-    #         "title": "System Lambda ($/MWh)",
-    #         "titlefont": {
-    #             "size": 16
-    #         },
-    #     },
-    #     "height": 700,
-    #     "legend": {
-    #         "x": 0,
-    #         "y": 1,
-    #         "orientation": "h"
-    #     }
-    # }
-
-    # data = [trace, trace_trendline]
-    
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
     layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -287,7 +245,7 @@ def scrape():
     return render_template(
         "scrape.html",
         referring_func_name=referring_func_name,
-        page_name=page_names[referring_func_name]
+        page_name=page_names[referring_func_name],
     )
 
 

@@ -4,7 +4,7 @@ import datetime
 
 
 class DictMixIn:
-    def to_dict(self, timestamp=True):
+    def to_dict(self, timestamp=True, *columns):
         return {
             column.name: getattr(self, column.name)
             if not isinstance(
@@ -12,7 +12,9 @@ class DictMixIn:
             )
             else getattr(self, column.name).isoformat()
             for column in self.__table__.columns
-            if timestamp or column.name != "SCEDTimeStamp"
+            if timestamp
+            or column.name != "SCEDTimeStamp"
+            and (column.name in columns or not columns)
         }
 
 

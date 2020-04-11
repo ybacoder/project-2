@@ -59,19 +59,29 @@
     </div>
   </header><!-- End Header -->
 
-<div class="container">
-  <div class="row my-5"></div>
-  <div class="row my-5"></div>
-  <div class="row my-5"></div>
-  <center>
-    <h4>Your scrape request has been queued. This may take up to 10 minutes.</h4>
-    <a href="{{ url_for(referring_func_name) }}">
-      <button id="filter-btn" type="button" class="btn btn-secondary">Back to {{ page_name }}</button>
-    </a>
-  </center>
-  <div class="row my-5"></div>
-  <div class="row my-5"></div>
-</div>
+
+<main id="main">
+
+  <!-- ======= Scrape Confirmation Section ======= -->
+    <section id="scrape-confirmation">
+      <div class="container wow fadeIn">
+        <br>
+        <div class="section-header">
+          <h3 class="section-title"> </br>Your scrape request has been queued.</h3>
+          <p class="section-description">This may take up to 10 minutes.</p>
+        </div>
+        <body>
+            <center>
+              <a href="{{ url_for(referring_func_name) }}">
+                <button id="filter-btn" type="button" class="btn btn-secondary">Back to {{ page_name }}</button>
+              </a>
+            </center>
+        </body>
+        <br>
+      </div>
+    </section><!-- End Scrape Confirmation Section -->
+
+  </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
