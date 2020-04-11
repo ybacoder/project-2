@@ -25,6 +25,7 @@ import numpy
 import plotly.express as px
 from worker import conn
 from rq import Queue
+import datetime as dt
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -127,6 +128,9 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
+    now = dt.datetime.now()
+    ten_days_ago = now - dt.timedelta(10)
+
     results = (
         app.session.query(
             models.Wind.SCEDTimeStamp, models.Wind.System_Wide, models.Wind.SystemLambda
@@ -153,7 +157,7 @@ def plot1():
     layout = {
         "title": "Wind Generation and System Lambda vs. Time",
         "titlefont": {"size": 24},
-        "xaxis": {"title": "Timestamp", "titlefont": {"size": 16},},
+        "xaxis": {"title": "Timestamp", "titlefont": {"size": 16}, "range": [ten_days_ago, now]},
         "yaxis": {
             "title": "System Lambda ($/MWh)",
             "titlefont": {"color": "#1f77b4", "size": 16},
