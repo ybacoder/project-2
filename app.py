@@ -5,7 +5,7 @@ from flask import (
     _app_ctx_stack,
     url_for,
     request,
-    redirect
+    redirect,
 )
 import scraping
 import pandas as pd
@@ -36,11 +36,10 @@ app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func
 # for redirect after scraping
 referring_func_name = "home"
 page_names = {
-    'home': "Home Page",
-    'data': "Data Page",
-    'plot1': "Time Series Page",
-    'plot2': "Correlation Page",
-
+    "home": "Home Page",
+    "data": "Data Page",
+    "plot1": "Time Series Page",
+    "plot2": "Correlation Page",
 }
 
 # for background tasks
@@ -74,29 +73,29 @@ def data_access():
     request_end = request.args.get("end")
 
     try:
-        base_cmd = app.session.query(
+        cmd = app.session.query(
             models.Wind.SCEDTimeStamp,
             models.Wind.RepeatedHourFlag,
             models.Wind.SystemLambda,
             models.Wind.System_Wide,
             models.Wind.LZ_North,
             models.Wind.LZ_South_Houston,
-            models.Wind.LZ_West
+            models.Wind.LZ_West,
         )
 
         if request_start:
-            base_cmd = base_cmd.filter(
+            cmd = cmd.filter(
                 models.Wind.SCEDTimeStamp
                 >= dt.datetime.strptime(request_start, "%Y-%m-%d")
             )
 
         if request_end:
-            base_cmd = base_cmd.filter(
+            cmd = cmd.filter(
                 models.Wind.SCEDTimeStamp
                 < (dt.datetime.strptime(request_end, "%Y-%m-%d") + dt.timedelta(days=1))
             )
 
-        results = base_cmd.all()
+        results = cmd.all()
         data = [
             {result.SCEDTimeStamp.isoformat(): result.to_dict(False)}
             for result in results
@@ -124,13 +123,13 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    results = app.session.query(
-            models.Wind.SCEDTimeStamp,
-            models.Wind.System_Wide,
-            models.Wind.SystemLambda
-        )\
-        .filter(models.Wind.System_Wide != 0)\
+    results = (
+        app.session.query(
+            models.Wind.SCEDTimeStamp, models.Wind.System_Wide, models.Wind.SystemLambda
+        )
+        .filter(models.Wind.System_Wide != 0)
         .all()
+    )
 
     trace1 = {
         "x": [result.SCEDTimeStamp for result in results],
@@ -149,21 +148,11 @@ def plot1():
 
     layout = {
         "title": "Wind Generation and System Lambda vs. Time",
-        "titlefont": {
-            "size": 24
-        },
-        "xaxis": {
-            "title": "Timestamp",
-            "titlefont": {
-                "size": 16
-            },
-        },
+        "titlefont": {"size": 24},
+        "xaxis": {"title": "Timestamp", "titlefont": {"size": 16},},
         "yaxis": {
             "title": "System Lambda ($/MWh)",
-            "titlefont": {
-                "color": "#1f77b4",
-                "size": 16
-            },
+            "titlefont": {"color": "#1f77b4", "size": 16},
             "tickfont": {"color": "#1f77b4"},
             "range": [-100, 1000],
             "tick0": 0,
@@ -171,10 +160,7 @@ def plot1():
         },
         "yaxis2": {
             "title": "Wind Generation (GW)",
-            "titlefont": {
-                "color": "#ff7f0e",
-                "size": 16
-            },
+            "titlefont": {"color": "#ff7f0e", "size": 16},
             "tickfont": {"color": "#ff7f0e"},
             "range": [-2000, 20000],
             "tick0": 0,
@@ -199,20 +185,26 @@ def plot2():
     referring_func_name = "plot2"
 
     df = pd.read_sql(
-        
-        app.session.query(
-            models.Wind.System_Wide,
-            models.Wind.SystemLambda
-        )\
-        .filter(models.Wind.System_Wide != 0)\
+        app.session.query(models.Wind.System_Wide, models.Wind.SystemLambda)
+        .filter(models.Wind.System_Wide != 0)
         .statement,
-
-        con = engine
-
+        con=engine,
     )
 
-    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="simple_white", title="System Lambda vs. Wind Generation").to_dict()
-    
+    fig_dict = px.scatter(
+        df,
+        x="System_Wide",
+        y="SystemLambda",
+        labels={
+            "System_Wide": "Wind Generation (GW)",
+            "SystemLambda": "System Lambda ($/MWh)",
+        },
+        log_y=True,
+        trendline="ols",
+        template="simple_white",
+        title="System Lambda vs. Wind Generation",
+    ).to_dict()
+
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
     layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -229,7 +221,7 @@ def scrape():
     return render_template(
         "scrape.html",
         referring_func_name=referring_func_name,
-        page_name=page_names[referring_func_name]
+        page_name=page_names[referring_func_name],
     )
 
 
