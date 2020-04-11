@@ -129,7 +129,7 @@ def plot1():
     referring_func_name = "plot1"
 
     now = dt.datetime.now()
-    ten_days_ago = now - dt.timedelta(30)
+    ten_days_ago = now - dt.timedelta(10)
 
     results = (
         app.session.query(
