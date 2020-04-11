@@ -74,13 +74,7 @@ def data_access():
 
     try:
         cmd = app.session.query(
-            models.Wind.SCEDTimeStamp,
-            models.Wind.RepeatedHourFlag,
-            models.Wind.SystemLambda,
-            models.Wind.System_Wide,
-            models.Wind.LZ_North,
-            models.Wind.LZ_South_Houston,
-            models.Wind.LZ_West,
+            models.Wind
         )
 
         if request_start:
