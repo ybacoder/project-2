@@ -12,7 +12,7 @@ The **Electric Reliability Council of Texas (ERCOT)** manages the flow of electr
 
 ERCOT Real-Time Market:
 
-During real-time, ERCOT dispatches resources based on economics and reliability to meet the system demand while observing resource and transmission constraints. Security Constrained Economic Dispatch (SCED) is the real-time market evaluation of offers to produce a least-cost dispatch of online resources. SCED calculates Locational Marginal Prices (LMPs) using a two-step methodology that applies mitigation to resolve non-competitive constraints.
+During real-time, ERCOT dispatches resources to maximize reliability of the transmission grid. This must be accomplished while instantaneously and precisely matching power supply to the system demand and while observing resource and transmission constraints. Security Constrained Economic Dispatch (SCED) is the real-time market evaluation of offers to produce a least-cost dispatch of online resources. SCED calculates Locational Marginal Prices (LMPs) using a two-step methodology that applies mitigation to resolve non-competitive constraints.
 
 ERCOT Real-Time Data Sources:
 
@@ -33,11 +33,11 @@ The time series plot looks at wind generation and the system wide price of energ
 
 ### Correlation Plot
 
-#### Wind Generation vs. System Lambda
+#### System Lambda vs. Wind Generation
 
-The correlation plot looks at the relationship *between* the System Lambda and wind generation. By including each quantity on a different axis, this plot allows the user to visualize the overall effect of wind on energy prices in ERCOT. The correlation plot also includes information about the time of day via the coloration of the data points.
+The correlation plot looks at the relationship *between* the System Lambda and wind generation. By including each quantity on a different axis, this plot allows the user to visualize the overall effect of wind on energy prices in ERCOT; a trendline is included to illustrate this. The correlation plot also includes information about the time of day via the coloration of the data points.
 
-<img src= "/static/images/correlation.png">
+<img src= "/static/images/correlation_with_logsystemlambda.png">
 
 ## Heroku Deployment
 
@@ -47,10 +47,14 @@ The Texas Wind Energy web app is deployed via **Heroku**. It can be found [here]
 
 ### Results
 
-Based on the energy data we have gathered up until April 11th, 2020, it appears that **as wind generation increases, the price of energy decreases.** Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen, and the trendline on the correlation plot shows a steady decrease in price with wind generation.
+Based on the energy data we have gathered up until April 11th, 2020, it appears that **as wind generation increases, the price of energy decreases.** Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen, and the trendline on the correlation plot shows a steady decrease in price with wind generation. Ordinary least squares regressions were performed with and without taking the log (base 10) of the system lambda, and the logarithmic trendline significantly outperformed the linear in terms of R-squared.
 
 ### Challenges
 
 Although the correlation plot seems to show a clear correlation on this trendline, there are some imperfections in the way this is was obtained. Namely, the price axis must be logarithmic to easily visualize the trend; however, *some of the prices are negative* and thus have no logarithmic value. Therefore, the logarithmic adjustment of price has no mathematical basis and is only a convenient way to find a visual correlation. Despite this drawback, there are only a few data points with negative prices, so our correlation plot validates the idea that such a relationship could be uncovered after the underlying market and physical phenomena are more appropriately accounted for.
 
 To some extent, the time series plot provides what the correlation plot does not: an untampered record of both generation and price data as they occurred. Although it is not always best to "eyeball" correlations via a time series, in this case the time series makes up for the messiness of directly plotting the two quantities against each other.
+
+### Areas for Improvement
+
+Later iterations of this project could account for better mathematical considerations of the data and could expand upon these findings by, for example, splitting by zone. It is also possible for power generated in ERCOT to be exported to other regions and vice versa, so the effect is not necessarily contained within ERCOT; to mitigate this, future improvements could include aggregations over many regions.
