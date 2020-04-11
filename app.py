@@ -195,12 +195,7 @@ def plot2():
         .statement,
         con=engine,
     ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
-        lambda x:
-            "On-Peak"
-            if x.weekday() < 6
-            and x.hour > 6
-            and x.hour < 22
-            else "Off-Peak"
+        lambda x: x.hour
     ))
 
     fig_dict = px.scatter(
@@ -210,7 +205,7 @@ def plot2():
         labels={
             "System_Wide": "Wind Generation (GW)",
             "SystemLambda": "System Lambda ($/MWh)",
-            "SCEDTimeStamp": "Peak Status"
+            "SCEDTimeStamp": "Hour"
         },
         log_y=True,
         trendline="ols",
