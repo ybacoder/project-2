@@ -46,6 +46,12 @@ page_names = {
 # for background tasks
 queue = Queue(connection=conn)
 
+# to combine querying, scraping, and loading into a single job
+def scrape_and_load():
+    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
+    clean_data.data_scrape(since)
+    load.csv_db()
+
 
 @app.route("/")
 def home():
@@ -276,14 +282,7 @@ def scrape():
 
     global referring_func_name
 
-    # # get "since" date to avoid longer-than-necessary scrapes
-    # since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
-
-    # # scrape & munge
-    # queue.enqueue(clean_data.data_scrape, since, job_timeout=1200)  # 20 minutes
-
-    # # load into db
-    # queue.enqueue(load.csv_db)
+    queue.enqueue(scrape_and_load, job_timeout=1200)  # 20 minutes
 
     return render_template(
         "scrape.html",
