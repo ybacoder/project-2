@@ -212,7 +212,7 @@ def plot2():
         template="simple_white",
         title="System Lambda vs. Wind Generation",
         color="SCEDTimeStamp",
-        color_continuous_scale=["blue", "yellow", "yellow", "blue"],
+        color_continuous_scale=plotly.colors.cyclical.Edge,
         opacity=.5,
         height=700
     ).to_dict()
