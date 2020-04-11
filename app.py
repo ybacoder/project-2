@@ -81,6 +81,7 @@ def data_access():
             models.Wind.LZ_North,
             models.Wind.LZ_South_Houston,
             models.Wind.LZ_West,
+            to_dict
         )
 
         if request_start:
