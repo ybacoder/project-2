@@ -27,7 +27,7 @@ The data is scraped using from the csv zip files on the ERCOT webpage using requ
 
 #### Wind Generation and System Lambda vs. Time
 
-The time series plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda) at 5 minute time intervals for each day.
+The time series plot looks at wind generation and the system wide price of energy (System Lambda) at 5 minute time intervals throughout the day. This plot helps to understand the nature of how the data changes each passing moment.
 
 <img src= "/static/images/timeseries.png">
 
@@ -35,7 +35,7 @@ The time series plot looks at wind generation in gigawatts (GW) and the system w
 
 #### Wind Generation vs. System Lambda
 
-The correlation plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda).
+The correlation plot looks at the relationship *between* the System Lambda and wind generation. By including each quantity on a different axis, this plot allows the user to visualize the overall effect of wind on energy prices in ERCOT.
 
 <img src= "/static/images/correlation.png">
 

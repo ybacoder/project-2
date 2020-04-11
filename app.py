@@ -164,7 +164,7 @@ def plot1():
             "dtick": 100,
         },
         "yaxis2": {
-            "title": "Wind Generation (GW)",
+            "title": "Wind Generation (MW)",
             "titlefont": {"color": "#ff7f0e", "size": 16},
             "tickfont": {"color": "#ff7f0e"},
             "range": [-2000, 20000],
@@ -203,7 +203,7 @@ def plot2():
         x="System_Wide",
         y="SystemLambda",
         labels={
-            "System_Wide": "Wind Generation (GW)",
+            "System_Wide": "Wind Generation (MW)",
             "SystemLambda": "System Lambda ($/MWh)",
             "SCEDTimeStamp": "Hour"
         },
