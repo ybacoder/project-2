@@ -23,17 +23,21 @@ The data is scraped using from the csv zip files on the ERCOT webpage using requ
 
 ## Plots
 
-### Timeseries Plot
+### Time Series Plot
 
-#### Wind Generation and System Lambda vs Time
+#### Wind Generation and System Lambda vs. Time
 
-photo of plot and description needed
+The time series plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda) at 5 minute time intervals for each day.
+
+<img src= "/static/images/timeseries.png">
 
 ### Correlation Plot
 
 #### Wind Generation vs. System Lambda
 
-photo of plot and description needed
+The correlation plot looks at wind generation in gigawatts (GW) and the system wide price of energy per megawatt hour (MWh) (System Lambda).
+
+<img src= "/static/images/correlation.png">
 
 ## Heroku Deployment
 
@@ -41,4 +45,4 @@ The Texas Wind Energy web app is deployed via **Heroku**. It can be found [here]
 
 ## Final Thoughts
 
-description 
+Based on the energy data we have gathered so far, it appears that as wind generation increases, the price of energy slightyly decreases. Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen.
