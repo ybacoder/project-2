@@ -49,7 +49,7 @@ The Texas Wind Energy web app is deployed via **Heroku**. It can be found [here]
 
 Based on the energy data we have gathered up until April 11th, 2020, it appears that **as wind generation increases, the price of energy decreases.** Our time series plot shows that spikes in the price of energy tend to occur at times when wind generation has fallen, and the trendline on the correlation plot shows a steady decrease in price with wind generation.
 
-### Difficulties
+### Challenges
 
 Although the correlation plot seems to show a clear correlation on this trendline, there are some imperfections in the way this is was obtained. Namely, the price axis must be logarithmic to easily visualize the trend; however, *some of the prices are negative* and thus have no logarithmic value. Therefore, the logarithmic adjustment of price has no mathematical basis and is only a convenient way to find a visual correlation. Despite this drawback, there are only a few data points with negative prices, so our correlation plot validates the idea that such a relationship could be uncovered after the underlying market and physical phenomena are more appropriately accounted for.
 
