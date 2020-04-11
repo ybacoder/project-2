@@ -179,7 +179,7 @@ def plot2():
     referring_func_name = "plot2"
 
     df = pd.read_sql(
-        app.session.query(models.Wind.System_Wide, models.Wind.SystemLambda)
+        app.session.query(models.Wind.System_Wide, models.Wind.SystemLambda, models.Wind.SCEDTimeStamp)
         .filter(models.Wind.System_Wide != 0)
         .statement,
         con=engine,
@@ -197,8 +197,7 @@ def plot2():
         trendline="ols",
         template="simple_white",
         title="System Lambda vs. Wind Generation",
-        color="System_Wide",
-        color_continuous_scale=[(0, "orange"), (1, "orange")]
+        color="SCEDTimeStamp",
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
