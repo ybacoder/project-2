@@ -32,6 +32,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+
 </head>
 
 <body>
@@ -47,7 +48,7 @@
       <nav id="nav-menu-container">
         <ul class="nav-menu">
           <li><a href="/#">Home</a></li>
-          <li class="menu-active"><a href="scrape">Scrape Data</a></li>
+          <li class="menu-active"><a id="scrape" href="scrape">Scrape Data</a></li>
           <li><a href="data">View Data</a></li>
           <li><a href="timeseries">Time Series Plot</a></li>
           <li><a href="correlation">Correlation Plot</a></li>
@@ -57,6 +58,20 @@
       </nav><!-- #nav-menu-container -->
     </div>
   </header><!-- End Header -->
+
+<div class="container">
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+  <center>
+    <h4>Your scrape request has been queued. This may take up to 10 minutes.</h4>
+    <a href="{{ url_for(referring_func_name) }}">
+      <button id="filter-btn" type="button" class="btn btn-secondary">Back to {{ page_name }}</button>
+    </a>
+  </center>
+  <div class="row my-5"></div>
+  <div class="row my-5"></div>
+</div>
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
