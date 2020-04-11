@@ -124,81 +124,71 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    df = pd.read_sql(
-        
-        app.session.query(
+    results = app.session.query(
+            models.Wind.SCEDTimeStamp,
             models.Wind.System_Wide,
             models.Wind.SystemLambda
         )\
         .filter(models.Wind.System_Wide != 0)\
-        .statement,
+        .all()
 
-        con = engine
+    trace1 = {
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.SystemLambda for result in results],
+        "name": "System Lambda ($/MWh)",
+        "type": "scatter",
+    }
 
-    )
+    trace2 = {
+        "x": [result.SCEDTimeStamp for result in results],
+        "y": [result.System_Wide for result in results],
+        "name": "Wind Generation (GW)",
+        "type": "scatter",
+        "yaxis": "y2",
+    }
 
-    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
+    layout = {
+        "title": "Wind Generation and System Lambda vs. Time",
+        "titlefont": {
+            "size": 24
+        },
+        "xaxis": {
+            "title": "Timestamp",
+            "titlefont": {
+                "size": 16
+            },
+        },
+        "yaxis": {
+            "title": "System Lambda ($/MWh)",
+            "titlefont": {
+                "color": "#1f77b4",
+                "size": 16
+            },
+            "tickfont": {"color": "#1f77b4"},
+            "range": [-100, 1000],
+            "tick0": 0,
+            "dtick": 100,
+        },
+        "yaxis2": {
+            "title": "Wind Generation (GW)",
+            "titlefont": {
+                "color": "#ff7f0e",
+                "size": 16
+            },
+            "tickfont": {"color": "#ff7f0e"},
+            "range": [-2000, 20000],
+            "tick0": 0,
+            "dtick": 2000,
+            "overlaying": "y",
+            "side": "right",
+        },
+        "height": 700,
+    }
 
-    # trace1 = {
-    #     "x": [result.SCEDTimeStamp for result in results],
-    #     "y": [result.SystemLambda for result in results],
-    #     "name": "System Lambda ($/MWh)",
-    #     "type": "scatter",
-    # }
+    data = [trace1, trace2]
+    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
 
-    # trace2 = {
-    #     "x": [result.SCEDTimeStamp for result in results],
-    #     "y": [result.System_Wide for result in results],
-    #     "name": "Wind Generation (GW)",
-    #     "type": "scatter",
-    #     "yaxis": "y2",
-    # }
-
-    # layout = {
-    #     "title": "Wind Generation and System Lambda vs. Time",
-    #     "titlefont": {
-    #         "size": 24
-    #     },
-    #     "xaxis": {
-    #         "title": "Timestamp",
-    #         "titlefont": {
-    #             "size": 16
-    #         },
-    #     },
-    #     "yaxis": {
-    #         "title": "System Lambda ($/MWh)",
-    #         "titlefont": {
-    #             "color": "#1f77b4",
-    #             "size": 16
-    #         },
-    #         "tickfont": {"color": "#1f77b4"},
-    #         "range": [-100, 1000],
-    #         "tick0": 0,
-    #         "dtick": 100,
-    #     },
-    #     "yaxis2": {
-    #         "title": "Wind Generation (GW)",
-    #         "titlefont": {
-    #             "color": "#ff7f0e",
-    #             "size": 16
-    #         },
-    #         "tickfont": {"color": "#ff7f0e"},
-    #         "range": [-2000, 20000],
-    #         "tick0": 0,
-    #         "dtick": 2000,
-    #         "overlaying": "y",
-    #         "side": "right",
-    #     },
-    #     "height": 700,
-    # }
-
-    # data = [trace1, trace2]
-
-    fig_dict = fig.to_dict()
-    data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
-    layout = json.dumps(fig_dict["layout"], cls=plotly.utils.PlotlyJSONEncoder)
-
-    return render_template("plot1.html", data=data, layout=layout)
+    return render_template("plot1.html", data_json=data_json, layout=layout)
 
 
 @app.route("/correlation")
