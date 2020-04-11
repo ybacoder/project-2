@@ -33,6 +33,15 @@ app = Flask(__name__)
 CORS(app)
 app.session = scoped_session(SessionLocal, scopefunc=_app_ctx_stack.__ident_func__)
 
+# for background tasks
+queue = Queue(connection=conn)
+
+# to combine querying, scraping, and loading into a single job
+def scrape_and_load():
+    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
+    clean_data.data_scrape(since)
+    load.csv_db()
+
 # for redirect after scraping
 referring_func_name = "home"
 page_names = {
@@ -42,14 +51,16 @@ page_names = {
     "plot2": "Correlation Page",
 }
 
-# for background tasks
-queue = Queue(connection=conn)
-
-# to combine querying, scraping, and loading into a single job
-def scrape_and_load():
-    since = app.session.query(models.Wind.SCEDTimeStamp)[-1][0]
-    clean_data.data_scrape(since)
-    load.csv_db()
+# for `get_data` route (not all columns are necessary for users to see)
+DATA_COLUMNS = [
+    "SystemLambda",
+    "RepeatedHourFlag",
+    "System_Wide",
+    "LZ_South_Houston",
+    "LZ_West",
+    "LZ_North",
+    "DSTFlag"
+]
 
 
 @app.route("/")
@@ -91,7 +102,7 @@ def data_access():
 
         results = cmd.all()
         data = [
-            {result.SCEDTimeStamp.isoformat(): result.to_dict(False)}
+            {result.SCEDTimeStamp.isoformat(): result.to_dict(False, *DATA_COLUMNS)}
             for result in results
         ]
 
