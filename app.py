@@ -124,34 +124,20 @@ def plot1():
     global referring_func_name
     referring_func_name = "plot1"
 
-    results = app.session.query(
-            models.Wind.SCEDTimeStamp,
+    df = pd.read_sql(
+        
+        app.session.query(
             models.Wind.System_Wide,
             models.Wind.SystemLambda
-        )
-        .filter(models.Wind.System_Wide != 0)
+        )\
+        .filter(models.Wind.System_Wide != 0)\
         .statement,
 
         con = engine
 
     )
 
-    fig = px.line(
-
-        df,
-        x="SCEDTimeStamp",
-        y="SystemLambda",
-        log_y=True,
-        title="Price and Wind Power vs. Time",
-        template="simple_white",
-        height=600,
-
-        labels = {
-            # "System_Wide": "System-wide wind generation (MW)",
-            "SystemLambda": "System lambda ($/MWh)"
-        }
-
-    )
+    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
 
     # trace1 = {
     #     "x": [result.SCEDTimeStamp for result in results],
