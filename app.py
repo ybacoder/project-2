@@ -145,7 +145,7 @@ def plot1():
 
     trace2 = {
         "x": [result.SCEDTimeStamp for result in results],
-        "y": [result.System_Wide for result in results],
+        "y": [result.System_Wide / 1000 for result in results],  # convert to GW
         "name": "Wind Generation (GW)",
         "type": "scatter",
         "yaxis": "y2",
@@ -164,7 +164,7 @@ def plot1():
             "dtick": 100,
         },
         "yaxis2": {
-            "title": "Wind Generation (MW)",
+            "title": "Wind Generation (GW)",
             "titlefont": {"color": "#ff7f0e", "size": 16},
             "tickfont": {"color": "#ff7f0e"},
             "range": [-2000, 20000],
@@ -196,14 +196,14 @@ def plot2():
         con=engine,
     ).assign(SCEDTimeStamp=lambda df: df.SCEDTimeStamp.apply(
         lambda x: x.hour
-    ))
+    )).assign(System_Wide=lambda df: df.System_Wide / 1000)  # convert to GW
 
     fig_dict = px.scatter(
         df,
         x="System_Wide",
         y="SystemLambda",
         labels={
-            "System_Wide": "Wind Generation (MW)",
+            "System_Wide": "Wind Generation (GW)",
             "SystemLambda": "System Lambda ($/MWh)",
             "SCEDTimeStamp": "Hour"
         },
