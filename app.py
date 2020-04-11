@@ -162,7 +162,6 @@ def plot1():
             "range": [-100, 1000],
             "tick0": 0,
             "dtick": 100,
-            "automargin": True
         },
         "yaxis2": {
             "title": "Wind Generation (GW)",
@@ -173,7 +172,6 @@ def plot1():
             "dtick": 2000,
             "overlaying": "y",
             "side": "right",
-            "automargin": True
         },
         "height": 700,
     }
