@@ -225,6 +225,8 @@ def plot2():
         color_continuous_scale=["blue", "yellow", "yellow", "blue"],
         opacity=0.5,
         height=700,
+        marginal_x="histogram",
+        marginal_y="histogram"
     ).to_dict()
 
     data = json.dumps(fig_dict["data"], cls=plotly.utils.PlotlyJSONEncoder)
