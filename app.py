@@ -129,7 +129,7 @@ def plot1():
     referring_func_name = "plot1"
 
     now = dt.datetime.now()
-    ten_days_ago = now - dt.timedelta(10)
+    ten_days_ago = now - dt.timedelta(30)
 
     results = (
         app.session.query(
@@ -154,7 +154,7 @@ def plot1():
         "yaxis": "y2",
     }
 
-    layout = {
+    layout = json.dumps({
         "title": "Wind Generation and System Lambda vs. Time",
         "titlefont": {"size": 24},
         "xaxis": {"title": "Timestamp", "titlefont": {"size": 16}, "range": [ten_days_ago, now]},
@@ -177,12 +177,11 @@ def plot1():
             "side": "right",
         },
         "height": 600,
-    }
+    }, cls=plotly.utils.PlotlyJSONEncoder)
 
-    data = [trace1, trace2]
-    data_json = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
+    data = json.dumps([trace1, trace2], cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template("plot1.html", data_json=data_json, layout=layout)
+    return render_template("plot1.html", data=data, layout=layout)
 
 
 @app.route("/correlation")
