@@ -200,7 +200,7 @@ def plot2():
 
     print(df.head())  ###
 
-    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", log_y=True, trendline="ols").to_dict()
+    fig_dict = px.scatter(df, x="System_Wide", y="SystemLambda", labels= {"System_Wide": "Wind Generation (GW)", "SystemLambda": "System Lambda ($/MWh)"}, log_y=True, trendline="ols", template="ggplot2", title="System Lambda vs. Wind Generation").to_dict()
 
     # trace = {
     #     "x": [result.System_Wide for result in results],
